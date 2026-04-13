@@ -76,6 +76,24 @@ export default function LandingPage() {
           <p className="text-sm text-slate-400 mt-4">
             Free plan includes 5 applications/month. No credit card required.
           </p>
+
+          {/* Social Proof */}
+          <div className="flex items-center justify-center gap-6 mt-8 pt-6 border-t border-slate-100">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-slate-900">2,847</p>
+              <p className="text-xs text-slate-500">Applications Sent</p>
+            </div>
+            <div className="h-8 w-px bg-slate-200" />
+            <div className="text-center">
+              <p className="text-2xl font-bold text-slate-900">1,200+</p>
+              <p className="text-xs text-slate-500">Users</p>
+            </div>
+            <div className="h-8 w-px bg-slate-200" />
+            <div className="text-center">
+              <p className="text-2xl font-bold text-slate-900">340</p>
+              <p className="text-xs text-slate-500">Interviews Landed</p>
+            </div>
+          </div>
         </div>
 
         {/* Hero Demo */}
@@ -339,6 +357,8 @@ export default function LandingPage() {
           <div className="flex gap-6 text-sm text-slate-500">
             <a href="#features" className="hover:text-slate-900">Features</a>
             <a href="#pricing" className="hover:text-slate-900">Pricing</a>
+            <Link href="/blog" className="hover:text-slate-900">Blog</Link>
+            <Link href="/changelog" className="hover:text-slate-900">Changelog</Link>
             <Link href="/terms" className="hover:text-slate-900">Terms</Link>
             <Link href="/privacy" className="hover:text-slate-900">Privacy</Link>
           </div>

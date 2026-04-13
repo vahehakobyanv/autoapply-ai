@@ -17,6 +17,7 @@ import {
   X,
   GraduationCap,
   CalendarDays,
+  ScanSearch,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/resume', label: 'Resume', icon: FileText },
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
   { href: '/tracker', label: 'Tracker', icon: Kanban },
+  { href: '/ats-score', label: 'ATS Score', icon: ScanSearch },
   { href: '/interview-prep', label: 'Interview Prep', icon: GraduationCap },
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
   { href: '/payments', label: 'Billing', icon: CreditCard },
