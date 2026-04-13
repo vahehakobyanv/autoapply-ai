@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { UserPlus, Search, Loader2, Linkedin, Mail, Phone, Building2, Trash2, Calendar, Plus } from 'lucide-react';
+import { UserPlus, Search, Loader2, Link2, Mail, Phone, Building2, Trash2, Calendar, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Contact } from '@/types';
 
@@ -118,7 +118,7 @@ export default function ContactsPage() {
                   {contact.notes && <p className="text-xs text-muted-foreground mt-1">{contact.notes}</p>}
                 </div>
                 <div className="flex gap-2">
-                  {contact.linkedin_url && <a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer"><Button variant="outline" size="sm"><Linkedin className="h-3 w-3" /></Button></a>}
+                  {contact.linkedin_url && <a href={contact.linkedin_url} target="_blank" rel="noopener noreferrer"><Button variant="outline" size="sm"><Link2 className="h-3 w-3" /></Button></a>}
                   <Button variant="outline" size="sm" onClick={() => deleteContact(contact.id)}><Trash2 className="h-3 w-3" /></Button>
                 </div>
               </div>

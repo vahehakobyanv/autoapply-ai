@@ -15,7 +15,7 @@ import {
   LayoutDashboard, FileText, Briefcase, Kanban, Settings, CreditCard,
   GraduationCap, CalendarDays, ScanSearch, Globe, Bot, Building2,
   Target, Trophy, Users, Upload, Mic, Mail, Search, Wand2, UserCircle,
-  FolderOpen, Scale, TrendingUp, Linkedin, Download,
+  FolderOpen, Scale, TrendingUp, Link2, Download,
 } from 'lucide-react';
 
 const pages = [
@@ -29,7 +29,7 @@ const pages = [
   { name: 'Tailor Resume', href: '/resume-tailor', icon: Wand2, group: 'Resume & Profile' },
   { name: 'CV Import', href: '/cv-import', icon: Upload, group: 'Resume & Profile' },
   { name: 'Portfolio', href: '/portfolio', icon: Globe, group: 'Resume & Profile' },
-  { name: 'LinkedIn Optimizer', href: '/linkedin-optimizer', icon: Linkedin, group: 'Resume & Profile' },
+  { name: 'LinkedIn Optimizer', href: '/linkedin-optimizer', icon: Link2, group: 'Resume & Profile' },
   { name: 'ATS Score', href: '/ats-score', icon: ScanSearch, group: 'AI Tools' },
   { name: 'Why Rejected', href: '/rejection-analysis', icon: Target, group: 'AI Tools' },
   { name: 'Company Insights', href: '/company-insights', icon: Building2, group: 'AI Tools' },

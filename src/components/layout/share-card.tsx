@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Share2, Linkedin, Twitter, Copy, Check, Loader2 } from 'lucide-react';
+import { Share2, ExternalLink, Link, Copy, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function ShareCard() {
@@ -64,8 +64,8 @@ export function ShareCard() {
               </div>
             </div>
             <div className="p-3 flex gap-2">
-              <Button size="sm" variant="outline" className="flex-1" onClick={shareLinkedIn}><Linkedin className="h-3 w-3 mr-1" />LinkedIn</Button>
-              <Button size="sm" variant="outline" className="flex-1" onClick={shareTwitter}><Twitter className="h-3 w-3 mr-1" />Twitter</Button>
+              <Button size="sm" variant="outline" className="flex-1" onClick={shareLinkedIn}><Link className="h-3 w-3 mr-1" />LinkedIn</Button>
+              <Button size="sm" variant="outline" className="flex-1" onClick={shareTwitter}><ExternalLink className="h-3 w-3 mr-1" />Twitter</Button>
               <Button size="sm" variant="outline" onClick={copyText}>{copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}</Button>
             </div>
           </div>

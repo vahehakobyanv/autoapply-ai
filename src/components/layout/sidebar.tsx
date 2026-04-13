@@ -9,7 +9,7 @@ import {
   LogOut, Zap, Menu, X, GraduationCap, CalendarDays, ScanSearch,
   Globe, Bot, Building2, Target, Trophy, Users, Upload, Mic, Mail,
   Search, ChevronDown, Wand2, UserCircle, FolderOpen, Scale,
-  TrendingUp, Linkedin, Download, DollarSign, BarChart3, Sparkles,
+  TrendingUp, Link2, Download, DollarSign, BarChart3, Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -36,7 +36,7 @@ const navSections = [
       { href: '/resume-tailor', label: 'Tailor Resume', icon: Wand2 },
       { href: '/cv-import', label: 'CV Import', icon: Upload },
       { href: '/portfolio', label: 'Portfolio', icon: Globe },
-      { href: '/linkedin-optimizer', label: 'LinkedIn', icon: Linkedin },
+      { href: '/linkedin-optimizer', label: 'LinkedIn', icon: Link2 },
     ],
   },
   {

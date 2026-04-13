@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Linkedin, Loader2, Sparkles, CheckCircle, XCircle, Copy, Check } from 'lucide-react';
+import { Link2, Loader2, Sparkles, CheckCircle, XCircle, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface OptResult {
@@ -50,7 +50,7 @@ export default function LinkedInOptimizerPage() {
           <Textarea value={summary} onChange={e => setSummary(e.target.value)} placeholder="Paste your current LinkedIn About section here for better optimization..." rows={3} />
         </div>
         <Button onClick={optimize} disabled={loading} size="lg">
-          {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Linkedin className="h-4 w-4 mr-2" />}
+          {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Link2 className="h-4 w-4 mr-2" />}
           Optimize My Profile
         </Button>
         <p className="text-xs text-muted-foreground">Uses your AutoApply profile data (name, role, skills, experience)</p>
