@@ -10,6 +10,26 @@ export const metadata: Metadata = {
 const ENTRIES = [
   {
     date: 'Apr 14, 2026',
+    version: 'v3.0',
+    title: 'World-Class: Analytics, Skill Gaps, Salary Negotiation & More',
+    changes: [
+      { type: 'new', text: 'Advanced Analytics — response times, conversion funnels, best day to apply, source performance' },
+      { type: 'new', text: 'Skill Gap Dashboard — aggregated insights across all rejection analyses' },
+      { type: 'new', text: 'Salary Negotiation Coach — AI counter-offer strategy with market data' },
+      { type: 'new', text: 'AI Resume Tailoring — auto-customize resume per job with keyword injection' },
+      { type: 'new', text: 'Offer Comparison — side-by-side offers with AI scoring' },
+      { type: 'new', text: 'Contacts CRM — track recruiters and networking contacts' },
+      { type: 'new', text: 'Document Vault — store offer letters, contracts, certificates' },
+      { type: 'new', text: 'Job Market Insights — salary trends, demand levels, top skills by role' },
+      { type: 'new', text: 'LinkedIn Profile Optimizer — AI scores and improves your LinkedIn profile' },
+      { type: 'new', text: 'CSV Export — download all application data' },
+      { type: 'new', text: 'Weekly Digest API — automated progress summaries' },
+      { type: 'improved', text: 'Dark mode now works on landing page and all public pages' },
+      { type: 'improved', text: 'Sidebar expanded to 28 items in 4 collapsible sections' },
+    ],
+  },
+  {
+    date: 'Apr 14, 2026',
     version: 'v2.0',
     title: '8 Major Features: AI Agent, Teams, Gamification & More',
     changes: [

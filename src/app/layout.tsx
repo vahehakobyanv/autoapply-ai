@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GoogleAnalytics } from "@/components/layout/analytics";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -81,8 +82,10 @@ export default function RootLayout({
         <meta name="theme-color" content="#2563EB" />
       </head>
       <body className="min-h-full flex flex-col">
-        <GoogleAnalytics />
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <GoogleAnalytics />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

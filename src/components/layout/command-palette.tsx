@@ -20,6 +20,7 @@ import {
 
 const pages = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, group: 'Navigation' },
+  { name: 'Analytics', href: '/analytics', icon: TrendingUp, group: 'Navigation' },
   { name: 'Jobs', href: '/jobs', icon: Briefcase, group: 'Navigation' },
   { name: 'Job Agent', href: '/job-agent', icon: Bot, group: 'Navigation' },
   { name: 'Tracker', href: '/tracker', icon: Kanban, group: 'Navigation' },
@@ -36,6 +37,8 @@ const pages = [
   { name: 'Interview Prep', href: '/interview-prep', icon: GraduationCap, group: 'AI Tools' },
   { name: 'Mock Interview', href: '/interview-simulator', icon: Mic, group: 'AI Tools' },
   { name: 'Follow-Up Emails', href: '/follow-up', icon: Mail, group: 'AI Tools' },
+  { name: 'Salary Negotiation', href: '/salary-negotiation', icon: Scale, group: 'AI Tools' },
+  { name: 'Skill Gaps', href: '/skill-gaps', icon: Target, group: 'AI Tools' },
   { name: 'Compare Offers', href: '/offers', icon: Scale, group: 'Tools' },
   { name: 'Contacts CRM', href: '/contacts', icon: UserCircle, group: 'Tools' },
   { name: 'Documents', href: '/documents', icon: FolderOpen, group: 'Tools' },

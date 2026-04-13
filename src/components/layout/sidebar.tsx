@@ -9,7 +9,7 @@ import {
   LogOut, Zap, Menu, X, GraduationCap, CalendarDays, ScanSearch,
   Globe, Bot, Building2, Target, Trophy, Users, Upload, Mic, Mail,
   Search, ChevronDown, Wand2, UserCircle, FolderOpen, Scale,
-  TrendingUp, Linkedin, Download,
+  TrendingUp, Linkedin, Download, DollarSign, BarChart3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -22,6 +22,7 @@ const navSections = [
     label: 'Main',
     items: [
       { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/analytics', label: 'Analytics', icon: TrendingUp },
       { href: '/jobs', label: 'Jobs', icon: Briefcase },
       { href: '/job-agent', label: 'Job Agent', icon: Bot },
       { href: '/tracker', label: 'Tracker', icon: Kanban },
@@ -48,6 +49,8 @@ const navSections = [
       { href: '/interview-prep', label: 'Interview Prep', icon: GraduationCap },
       { href: '/interview-simulator', label: 'Mock Interview', icon: Mic },
       { href: '/follow-up', label: 'Follow-Up Emails', icon: Mail },
+      { href: '/salary-negotiation', label: 'Negotiate Salary', icon: DollarSign },
+      { href: '/skill-gaps', label: 'Skill Gaps', icon: Target },
     ],
   },
   {

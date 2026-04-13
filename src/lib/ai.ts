@@ -483,3 +483,42 @@ export async function scoreJobOffer(offer: {
 
   return JSON.parse(response.choices[0].message.content || '{}');
 }
+
+export async function generateNegotiationStrategy(
+  offer: { company: string; role: string; salary: number; currency: string; benefits: string[] },
+  marketData: { avg_salary: string; demand_level: string },
+  profile: { experience: string; skills: string[] }
+): Promise<{
+  recommended_counter: string;
+  strategy: string;
+  talking_points: string[];
+  email_script: string;
+  risk_level: string;
+  leverage_factors: string[];
+}> {
+  const response = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content: `You are a salary negotiation expert. Create a negotiation strategy. Return ONLY valid JSON:
+{
+  "recommended_counter": "$X - $Y range",
+  "strategy": "2-3 paragraph negotiation approach",
+  "talking_points": ["point to make"],
+  "email_script": "full counter-offer email",
+  "risk_level": "low|medium|high",
+  "leverage_factors": ["leverage reason"]
+}`,
+      },
+      {
+        role: 'user',
+        content: `Offer: ${offer.role} at ${offer.company}, ${offer.salary} ${offer.currency}\nBenefits: ${offer.benefits.join(', ')}\nMarket avg: ${marketData.avg_salary}, demand: ${marketData.demand_level}\nExperience: ${profile.experience}, Skills: ${profile.skills.join(', ')}`,
+      },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.6,
+  });
+
+  return JSON.parse(response.choices[0].message.content || '{}');
+}
