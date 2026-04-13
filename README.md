@@ -14,6 +14,14 @@ AI-powered job application platform optimized for Russia (hh.ru) and Armenia (st
 - **Multi-Language** — English and Russian support
 - **Referral System** — Invite friends for free credits
 - **Telegram Notifications** — Application sent, new job found, interview reminders
+- **Chrome Extension** (HIGH IMPACT) — Apply to jobs directly from any job board without leaving the page
+- **Portfolio Generator** (UNDERRATED) — Auto-generate a personal portfolio site from your profile and projects
+- **AI Job Search Agent** (NEXT LEVEL) — Autonomous agent that finds, filters, and recommends jobs matching your profile 24/7
+- **Company Insights** — AI-powered research on companies: culture, salary ranges, interview process, employee reviews
+- **"Why You Got Rejected" AI** — Analyze job descriptions vs your profile to identify gaps and get actionable improvement tips
+- **Gamification** (Retention Booster) — XP, streaks, achievements, and leaderboards to keep users engaged in their job search
+- **Team Mode** (B2B Opportunity) — Shared workspace for recruiters, career coaches, and bootcamps to manage multiple candidates
+- **AI CV Import** (SUPER USEFUL) — Upload any existing CV/resume (PDF, DOCX) and auto-parse it into your profile
 
 ## Tech Stack
 

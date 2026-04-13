@@ -103,3 +103,143 @@ export interface DashboardStats {
   weeklyActivity: { date: string; count: number }[];
   statusBreakdown: Record<ApplicationStatus, number>;
 }
+
+// Portfolio Generator
+export interface Portfolio {
+  id: string;
+  user_id: string;
+  slug: string;
+  title: string;
+  bio: string;
+  theme: 'minimal' | 'modern' | 'bold' | 'elegant';
+  sections: PortfolioSection[];
+  published: boolean;
+  custom_domain?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PortfolioSection {
+  type: 'hero' | 'about' | 'experience' | 'projects' | 'skills' | 'contact';
+  visible: boolean;
+  content: Record<string, unknown>;
+}
+
+// AI Job Search Agent
+export interface JobAgent {
+  id: string;
+  user_id: string;
+  name: string;
+  keywords: string[];
+  locations: string[];
+  salary_min?: number;
+  salary_max?: number;
+  sources: string[];
+  frequency: 'hourly' | 'daily' | 'weekly';
+  active: boolean;
+  last_run_at?: string;
+  results_count: number;
+  created_at: string;
+}
+
+export interface JobAgentResult {
+  id: string;
+  agent_id: string;
+  job_title: string;
+  company: string;
+  url: string;
+  salary?: string;
+  location?: string;
+  match_score: number;
+  seen: boolean;
+  created_at: string;
+}
+
+// Company Insights
+export interface CompanyInsight {
+  id: string;
+  company_name: string;
+  summary: string;
+  culture: string;
+  salary_range: string;
+  interview_process: string;
+  pros: string[];
+  cons: string[];
+  rating: number;
+  employee_count?: string;
+  industry?: string;
+  headquarters?: string;
+  created_at: string;
+}
+
+// Rejection Analysis
+export interface RejectionAnalysis {
+  id: string;
+  user_id: string;
+  job_id?: string;
+  job_title: string;
+  company: string;
+  match_score: number;
+  gaps: RejectionGap[];
+  suggestions: string[];
+  created_at: string;
+}
+
+export interface RejectionGap {
+  category: 'skills' | 'experience' | 'education' | 'location' | 'seniority';
+  description: string;
+  severity: 'low' | 'medium' | 'high';
+  action: string;
+}
+
+// Gamification
+export interface UserGamification {
+  id: string;
+  user_id: string;
+  xp: number;
+  level: number;
+  streak_days: number;
+  longest_streak: number;
+  last_active_date: string;
+  achievements: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  xp_reward: number;
+  condition: string;
+}
+
+// Team Mode
+export interface Team {
+  id: string;
+  name: string;
+  slug: string;
+  owner_id: string;
+  plan: 'team_free' | 'team_pro';
+  max_members: number;
+  created_at: string;
+}
+
+export interface TeamMember {
+  id: string;
+  team_id: string;
+  user_id: string;
+  role: 'owner' | 'admin' | 'member';
+  joined_at: string;
+  profile?: Profile;
+}
+
+export interface TeamInvite {
+  id: string;
+  team_id: string;
+  email: string;
+  role: 'admin' | 'member';
+  status: 'pending' | 'accepted' | 'expired';
+  created_at: string;
+}

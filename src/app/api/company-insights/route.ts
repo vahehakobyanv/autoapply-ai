@@ -1,65 +1,48 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-import Groq from 'groq-sdk';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+import { generateCompanyInsights } from '@/lib/ai';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
-
-export async function POST(request: Request) {
-  const supabase = await createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { companyName, jobTitle } = await request.json();
-
-  if (!companyName) {
-    return NextResponse.json({ error: 'Company name required' }, { status: 400 });
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const response = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      messages: [
-        {
-          role: 'system',
-          content: `You are a company research expert. Provide insights about a company for a job seeker. Return valid JSON:
-{
-  "overview": "2-3 sentence company overview",
-  "industry": "Tech / Finance / etc.",
-  "size": "Startup / SMB / Enterprise",
-  "culture": "Brief description of work culture",
-  "interviewProcess": {
-    "difficulty": "easy|moderate|hard",
-    "stages": ["Phone screening", "Technical interview", "Final round"],
-    "duration": "2-4 weeks typically",
-    "tips": ["Prepare for system design questions", "Focus on cultural fit"]
-  },
-  "salaryRange": {
-    "min": "estimate",
-    "max": "estimate",
-    "currency": "USD"
-  },
-  "pros": ["Good work-life balance", "Strong engineering culture"],
-  "cons": ["Fast-paced", "High expectations"],
-  "techStack": ["React", "Python", "AWS"],
-  "glassdoorRating": "4.2/5 (estimated)",
-  "interviewQuestions": ["Tell me about a challenging project", "Why this company?"]
-}
-Be helpful and realistic. Note these are AI-generated estimates.`,
-        },
-        {
-          role: 'user',
-          content: `Company: ${companyName}${jobTitle ? `\nPosition: ${jobTitle}` : ''}`,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.6,
-    });
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    return NextResponse.json(JSON.parse(response.choices[0].message.content || '{}'));
+    const { company } = await req.json();
+    if (!company?.trim()) {
+      return NextResponse.json({ error: 'Company name required' }, { status: 400 });
+    }
+
+    // Check cache first
+    const { data: cached } = await supabase
+      .from('company_insights')
+      .select('*')
+      .ilike('company_name', company.trim())
+      .single();
+
+    if (cached) {
+      return NextResponse.json(cached);
+    }
+
+    // Generate with AI
+    const insights = await generateCompanyInsights(company.trim());
+
+    // Cache the result
+    const { data, error } = await supabase
+      .from('company_insights')
+      .insert({
+        company_name: company.trim(),
+        ...insights,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({ company_name: company.trim(), ...insights });
+    }
+
+    return NextResponse.json(data);
   } catch {
-    return NextResponse.json({ error: 'Failed to get insights' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to get company insights' }, { status: 500 });
   }
 }

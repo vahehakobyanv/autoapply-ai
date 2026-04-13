@@ -18,6 +18,13 @@ import {
   GraduationCap,
   CalendarDays,
   ScanSearch,
+  Globe,
+  Bot,
+  Building2,
+  Target,
+  Trophy,
+  Users,
+  Upload,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -27,10 +34,17 @@ import { useState } from 'react';
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/resume', label: 'Resume', icon: FileText },
+  { href: '/cv-import', label: 'CV Import', icon: Upload },
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
+  { href: '/job-agent', label: 'Job Agent', icon: Bot },
   { href: '/tracker', label: 'Tracker', icon: Kanban },
   { href: '/ats-score', label: 'ATS Score', icon: ScanSearch },
+  { href: '/rejection-analysis', label: 'Why Rejected', icon: Target },
+  { href: '/company-insights', label: 'Companies', icon: Building2 },
+  { href: '/portfolio', label: 'Portfolio', icon: Globe },
   { href: '/interview-prep', label: 'Interview Prep', icon: GraduationCap },
+  { href: '/gamification', label: 'Progress', icon: Trophy },
+  { href: '/teams', label: 'Teams', icon: Users },
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
   { href: '/payments', label: 'Billing', icon: CreditCard },
   { href: '/settings', label: 'Settings', icon: Settings },
