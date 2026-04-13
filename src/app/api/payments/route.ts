@@ -1,8 +1,12 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { stripe } from '@/lib/stripe';
+import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
+  if (!isStripeConfigured) {
+    return NextResponse.json({ error: 'Stripe is not configured. Add STRIPE_SECRET_KEY to enable payments.' }, { status: 503 });
+  }
+
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
 

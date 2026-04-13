@@ -1,8 +1,13 @@
 import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-03-25.dahlia',
-});
+const stripeKey = process.env.STRIPE_SECRET_KEY;
+
+// Only initialize Stripe if key is configured
+export const stripe = stripeKey && stripeKey.startsWith('sk_')
+  ? new Stripe(stripeKey, { apiVersion: '2026-03-25.dahlia' })
+  : (null as unknown as Stripe);
+
+export const isStripeConfigured = !!stripe;
 
 export const PLANS = {
   free: {

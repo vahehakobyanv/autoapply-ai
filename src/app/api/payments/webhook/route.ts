@@ -1,8 +1,11 @@
-import { stripe } from '@/lib/stripe';
+import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { createServiceRoleClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
+  if (!isStripeConfigured) {
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 });
+  }
   const body = await request.text();
   const sig = request.headers.get('stripe-signature')!;
 
