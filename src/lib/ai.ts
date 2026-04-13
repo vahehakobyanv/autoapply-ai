@@ -15,9 +15,9 @@ export async function generateResume(
     languages: string[];
     location: string;
   },
-  language: 'en' | 'ru'
+  language: string
 ): Promise<string> {
-  const langLabel = language === 'ru' ? 'Russian' : 'English';
+  const langLabel = language === 'ru' ? 'Russian' : language === 'hy' ? 'Armenian' : 'English';
 
   const response = await groq.chat.completions.create({
     model: MODEL,
@@ -64,9 +64,9 @@ export async function generateCoverLetter(
     experience: string;
   },
   jobDescription: string,
-  language: 'en' | 'ru'
+  language: string
 ): Promise<string> {
-  const langLabel = language === 'ru' ? 'Russian' : 'English';
+  const langLabel = language === 'ru' ? 'Russian' : language === 'hy' ? 'Armenian' : 'English';
 
   const response = await groq.chat.completions.create({
     model: MODEL,

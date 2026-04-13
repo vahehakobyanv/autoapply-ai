@@ -126,6 +126,7 @@ export default function ResumePage() {
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="ru">Русский</SelectItem>
+              <SelectItem value="hy">Հայերեն</SelectItem>
             </SelectContent>
           </Select>
           <Select value={template} onValueChange={(v) => { if (v) setTemplate(v); }}>
