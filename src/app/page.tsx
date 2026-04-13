@@ -339,10 +339,11 @@ export default function LandingPage() {
           <div className="flex gap-6 text-sm text-slate-500">
             <a href="#features" className="hover:text-slate-900">Features</a>
             <a href="#pricing" className="hover:text-slate-900">Pricing</a>
-            <a href="#testimonials" className="hover:text-slate-900">Testimonials</a>
+            <Link href="/terms" className="hover:text-slate-900">Terms</Link>
+            <Link href="/privacy" className="hover:text-slate-900">Privacy</Link>
           </div>
           <p className="text-sm text-slate-400">
-            &copy; 2024 AutoApply AI. All rights reserved.
+            &copy; {new Date().getFullYear()} AutoApply AI. All rights reserved.
           </p>
         </div>
       </footer>

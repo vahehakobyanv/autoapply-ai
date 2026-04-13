@@ -1,0 +1,16 @@
+{
+  "name": "AutoApply AI",
+  "short_name": "AutoApply",
+  "description": "AI-powered job application automation",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

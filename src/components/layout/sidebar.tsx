@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { useState } from 'react';
 
 const navItems = [
@@ -42,9 +43,12 @@ export function Sidebar() {
 
   const NavContent = () => (
     <>
-      <div className="flex items-center gap-2 px-4 py-6">
-        <Zap className="h-7 w-7 text-blue-600" />
-        <span className="text-xl font-bold">AutoApply AI</span>
+      <div className="flex items-center justify-between px-4 py-6">
+        <div className="flex items-center gap-2">
+          <Zap className="h-7 w-7 text-blue-600" />
+          <span className="text-xl font-bold">AutoApply AI</span>
+        </div>
+        <ThemeToggle />
       </div>
 
       <nav className="flex-1 px-3 space-y-1">
