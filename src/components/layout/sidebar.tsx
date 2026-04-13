@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   GraduationCap,
+  CalendarDays,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
   { href: '/tracker', label: 'Tracker', icon: Kanban },
   { href: '/interview-prep', label: 'Interview Prep', icon: GraduationCap },
+  { href: '/calendar', label: 'Calendar', icon: CalendarDays },
   { href: '/payments', label: 'Billing', icon: CreditCard },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];

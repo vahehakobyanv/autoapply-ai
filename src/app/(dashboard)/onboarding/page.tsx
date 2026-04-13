@@ -9,7 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Zap, X, Plus } from 'lucide-react';
+import { Zap, X, Plus, Upload, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const STEPS = ['Name & Location', 'Job Role', 'Experience', 'Skills', 'Languages'];
 
@@ -38,8 +39,37 @@ export default function OnboardingPage() {
   const [skillInput, setSkillInput] = useState('');
   const [languages, setLanguages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [importing, setImporting] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+
+  const handleLinkedInImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/linkedin-import', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      // Auto-fill all fields
+      if (data.profile.name) setName(data.profile.name);
+      if (data.profile.location) setLocation(data.profile.location);
+      if (data.profile.role) setRole(data.profile.role);
+      if (data.profile.experience) setExperience(data.profile.experience);
+      if (data.profile.skills?.length) setSkills(data.profile.skills);
+      if (data.profile.languages?.length) setLanguages(data.profile.languages);
+
+      toast.success('Profile imported from LinkedIn! Review and click Complete.');
+      setStep(4); // Jump to last step
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to import');
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const addSkill = (skill: string) => {
     const trimmed = skill.trim();
@@ -123,6 +153,30 @@ export default function OnboardingPage() {
         </CardHeader>
 
         <CardContent className="space-y-6">
+          {/* LinkedIn Quick Import */}
+          {step === 0 && (
+            <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 text-center space-y-2">
+              <p className="text-sm font-medium">Quick Start: Import from LinkedIn</p>
+              <p className="text-xs text-muted-foreground">
+                Download your LinkedIn profile as PDF, then upload it here
+              </p>
+              <label className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-blue-700 transition-colors">
+                {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                {importing ? 'Importing...' : 'Upload LinkedIn PDF'}
+                <input
+                  type="file"
+                  accept=".pdf"
+                  className="hidden"
+                  onChange={handleLinkedInImport}
+                  disabled={importing}
+                />
+              </label>
+              <p className="text-[10px] text-muted-foreground">
+                LinkedIn → Profile → More → Save to PDF
+              </p>
+            </div>
+          )}
+
           {/* Step 1: Name & Location */}
           {step === 0 && (
             <div className="space-y-4">
