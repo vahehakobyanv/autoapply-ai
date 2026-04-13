@@ -79,7 +79,7 @@ export async function GET() {
     ];
 
     return NextResponse.json({
-      total, response_rate, avg_response_days, best_day, conversion,
+      total, response_rate, avg_response_days, best_day: bestDay, conversion,
       by_source, by_month, response_time_buckets,
       interviews: interviews.length, offers: offers.length,
     });
