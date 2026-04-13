@@ -9,6 +9,28 @@ export const metadata: Metadata = {
 
 const ENTRIES = [
   {
+    date: 'Apr 14, 2026',
+    version: 'v2.0',
+    title: '8 Major Features: AI Agent, Teams, Gamification & More',
+    changes: [
+      { type: 'new', text: 'AI CV Import — upload PDF/DOCX, auto-parse into your profile' },
+      { type: 'new', text: 'Portfolio Generator — AI-generated personal sites with 4 themes' },
+      { type: 'new', text: 'AI Job Search Agent — autonomous agents find jobs 24/7' },
+      { type: 'new', text: 'Company Insights — AI research on culture, salary, interviews' },
+      { type: 'new', text: '"Why You Got Rejected" AI — gap analysis with improvement tips' },
+      { type: 'new', text: 'Gamification — XP, levels, streaks, 12 achievements' },
+      { type: 'new', text: 'Team Mode (B2B) — shared workspace for recruiters and coaches' },
+      { type: 'new', text: 'Chrome Extension v2 — inline Save/Quick Apply on job pages' },
+      { type: 'new', text: 'AI Mock Interview Simulator — practice with real-time scoring' },
+      { type: 'new', text: 'AI Follow-Up Email Generator — 5 email types in EN/RU' },
+      { type: 'new', text: 'Command Palette (CMD+K) — quick navigation anywhere' },
+      { type: 'new', text: 'Notification Center — achievements, streaks, job alerts' },
+      { type: 'new', text: 'Portfolio Public Pages — shareable /p/[slug] URLs' },
+      { type: 'improved', text: 'Sidebar reorganized into collapsible sections' },
+      { type: 'improved', text: 'Auto XP rewards on every action' },
+    ],
+  },
+  {
     date: 'Apr 13, 2026',
     version: 'v1.5',
     title: 'ATS Score, Blog, Calendar & More',
