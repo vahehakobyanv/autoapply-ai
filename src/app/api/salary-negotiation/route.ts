@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient as createClient } from '@/lib/supabase/server';
 import { generateNegotiationStrategy, getMarketInsights } from '@/lib/ai';
 
 export async function POST(req: NextRequest) {
