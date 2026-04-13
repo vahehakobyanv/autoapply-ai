@@ -8,6 +8,8 @@ import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { ProgressRing } from '@/components/ui/progress-ring';
 import { HeatmapCalendar } from '@/components/ui/heatmap-calendar';
 import { OnboardingChecklist } from '@/components/layout/onboarding-checklist';
+import { SmartReminders } from '@/components/layout/smart-reminders';
+import { ShareCard } from '@/components/layout/share-card';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   FunnelChart, Funnel, LabelList, Cell,
@@ -108,16 +110,22 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground">Your job application overview</p>
         </div>
-        <Link href="/jobs">
-          <Button>
-            <Zap className="h-4 w-4 mr-2" />
-            Apply to Jobs
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <ShareCard />
+          <Link href="/jobs">
+            <Button>
+              <Zap className="h-4 w-4 mr-2" />
+              Apply to Jobs
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Onboarding Checklist */}
       <OnboardingChecklist />
+
+      {/* Smart Reminders */}
+      <SmartReminders />
 
       {/* Stats Cards with gradients and animated counters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

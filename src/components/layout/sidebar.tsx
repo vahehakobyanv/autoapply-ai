@@ -9,7 +9,7 @@ import {
   LogOut, Zap, Menu, X, GraduationCap, CalendarDays, ScanSearch,
   Globe, Bot, Building2, Target, Trophy, Users, Upload, Mic, Mail,
   Search, ChevronDown, Wand2, UserCircle, FolderOpen, Scale,
-  TrendingUp, Linkedin, Download, DollarSign, BarChart3,
+  TrendingUp, Linkedin, Download, DollarSign, BarChart3, Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -59,7 +59,9 @@ const navSections = [
       { href: '/offers', label: 'Compare Offers', icon: Scale },
       { href: '/contacts', label: 'Contacts CRM', icon: UserCircle },
       { href: '/documents', label: 'Documents', icon: FolderOpen },
+      { href: '/recommendations', label: 'For You', icon: Sparkles },
       { href: '/gamification', label: 'Progress', icon: Trophy },
+      { href: '/leaderboard', label: 'Leaderboard', icon: BarChart3 },
       { href: '/teams', label: 'Teams', icon: Users },
       { href: '/payments', label: 'Billing', icon: CreditCard },
       { href: '/settings', label: 'Settings', icon: Settings },

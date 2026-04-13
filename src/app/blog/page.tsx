@@ -81,7 +81,8 @@ export default function BlogPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {POSTS.map((post) => (
-            <article key={post.slug} className="border rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
+            <Link href={`/blog/${post.slug}`} key={post.slug}>
+            <article className="border rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
               <div className="h-40 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 flex items-center justify-center">
                 <span className="text-4xl opacity-50">
                   {post.category === 'Resume' ? '📄' :
@@ -107,6 +108,7 @@ export default function BlogPage() {
                 </div>
               </div>
             </article>
+            </Link>
           ))}
         </div>
 
