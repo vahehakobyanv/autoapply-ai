@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
       if (file.type === 'application/pdf') {
         // Read PDF as text (basic extraction)
         const buffer = Buffer.from(await file.arrayBuffer());
-        const pdfParse = (await import('pdf-parse')).default;
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const pdfParse = require('pdf-parse');
         const pdf = await pdfParse(buffer);
         cvText = pdf.text;
       } else {
