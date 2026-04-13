@@ -156,7 +156,7 @@ export default function AnalyticsPage() {
             {data.by_source.length > 0 ? (
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
-                  <Pie data={data.by_source} dataKey="total" nameKey="source" cx="50%" cy="50%" outerRadius={80} label={({ source, total }) => `${source}: ${total}`} fontSize={11}>
+                  <Pie data={data.by_source} dataKey="total" nameKey="source" cx="50%" cy="50%" outerRadius={80} label={(props: Record<string, unknown>) => `${props.source}: ${props.total}`} fontSize={11}>
                     {data.by_source.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
                   <Tooltip />
