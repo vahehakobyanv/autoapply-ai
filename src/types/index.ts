@@ -243,3 +243,70 @@ export interface TeamInvite {
   status: 'pending' | 'accepted' | 'expired';
   created_at: string;
 }
+
+// Contact/Recruiter CRM
+export interface Contact {
+  id: string;
+  user_id: string;
+  name: string;
+  email: string;
+  company: string;
+  role: string;
+  linkedin_url?: string;
+  phone?: string;
+  notes: string;
+  tags: string[];
+  last_contacted?: string;
+  next_follow_up?: string;
+  source: 'linkedin' | 'referral' | 'recruiter' | 'networking' | 'other';
+  created_at: string;
+  updated_at: string;
+}
+
+// Document Vault
+export interface Document {
+  id: string;
+  user_id: string;
+  name: string;
+  type: 'offer_letter' | 'contract' | 'certificate' | 'reference' | 'other';
+  file_url: string;
+  file_size: number;
+  job_id?: string;
+  notes: string;
+  created_at: string;
+}
+
+// Offer Comparison
+export interface JobOffer {
+  id: string;
+  user_id: string;
+  job_id?: string;
+  company: string;
+  role: string;
+  salary: number;
+  currency: string;
+  bonus?: number;
+  equity?: string;
+  benefits: string[];
+  remote_policy: 'remote' | 'hybrid' | 'onsite';
+  pto_days?: number;
+  commute_time?: number;
+  start_date?: string;
+  deadline?: string;
+  pros: string[];
+  cons: string[];
+  score?: number;
+  created_at: string;
+}
+
+// Job Market Insights
+export interface MarketInsight {
+  role: string;
+  location: string;
+  avg_salary: string;
+  demand_level: 'low' | 'medium' | 'high' | 'very_high';
+  top_skills: string[];
+  trending: boolean;
+  openings_count: number;
+  salary_trend: 'rising' | 'stable' | 'declining';
+}

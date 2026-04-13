@@ -310,3 +310,176 @@ Generate 5-10 relevant jobs.`,
 
   return JSON.parse(response.choices[0].message.content || '{"jobs":[]}');
 }
+
+export async function tailorResumeForJob(
+  resume: { name: string; role: string; summary: string; skills: string[]; experience: { title: string; company: string; description: string }[] },
+  jobTitle: string,
+  jobDescription: string,
+  jobRequirements: string
+): Promise<{
+  summary: string;
+  skills: string[];
+  experience: { title: string; company: string; description: string }[];
+  keywords_added: string[];
+  match_improvement: number;
+}> {
+  const response = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content: `You are a resume optimization expert. Tailor the resume to match the job description by adjusting keywords, rephrasing experience bullets, and highlighting relevant skills. Keep it truthful. Return ONLY valid JSON:
+{
+  "summary": "tailored professional summary",
+  "skills": ["reordered and supplemented skills"],
+  "experience": [{"title": "string", "company": "string", "description": "tailored description"}],
+  "keywords_added": ["new keywords incorporated"],
+  "match_improvement": 15
+}`,
+      },
+      {
+        role: 'user',
+        content: `Resume:\nName: ${resume.name}\nRole: ${resume.role}\nSummary: ${resume.summary}\nSkills: ${resume.skills.join(', ')}\nExperience: ${JSON.stringify(resume.experience).slice(0, 2000)}\n\nJob: ${jobTitle}\nDescription: ${jobDescription.slice(0, 2000)}\nRequirements: ${jobRequirements.slice(0, 1000)}`,
+      },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.5,
+  });
+
+  return JSON.parse(response.choices[0].message.content || '{}');
+}
+
+export async function generateNetworkingEmail(
+  profile: { name: string; role: string },
+  contact: { name: string; role: string; company: string },
+  purpose: string,
+  language: string
+): Promise<{ subject: string; body: string }> {
+  const langLabel = language === 'ru' ? 'Russian' : 'English';
+  const response = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content: `Write a professional cold outreach/networking email in ${langLabel}. Be concise, warm, and specific. Return ONLY valid JSON: {"subject": "string", "body": "string"}`,
+      },
+      {
+        role: 'user',
+        content: `From: ${profile.name}, ${profile.role}\nTo: ${contact.name}, ${contact.role} at ${contact.company}\nPurpose: ${purpose}`,
+      },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.7,
+  });
+
+  return JSON.parse(response.choices[0].message.content || '{}');
+}
+
+export async function optimizeLinkedInProfile(profile: {
+  name: string; role: string; skills: string[]; experience: string; summary?: string;
+}): Promise<{
+  headline: string;
+  about: string;
+  skills_to_add: string[];
+  skills_to_remove: string[];
+  tips: string[];
+  score: number;
+}> {
+  const response = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content: `You are a LinkedIn profile optimization expert. Analyze the profile and provide actionable improvements. Return ONLY valid JSON:
+{
+  "headline": "optimized LinkedIn headline (max 220 chars)",
+  "about": "optimized About section (2-3 paragraphs)",
+  "skills_to_add": ["skills to add to profile"],
+  "skills_to_remove": ["irrelevant skills to remove"],
+  "tips": ["actionable improvement tip"],
+  "score": 75
+}`,
+      },
+      {
+        role: 'user',
+        content: `Name: ${profile.name}\nRole: ${profile.role}\nSkills: ${profile.skills.join(', ')}\nExperience: ${profile.experience}\n${profile.summary ? `Current Summary: ${profile.summary}` : ''}`,
+      },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.6,
+  });
+
+  return JSON.parse(response.choices[0].message.content || '{}');
+}
+
+export async function getMarketInsights(role: string, location: string): Promise<{
+  avg_salary: string;
+  demand_level: string;
+  top_skills: string[];
+  trending: boolean;
+  openings_count: number;
+  salary_trend: string;
+  competing_roles: string[];
+  advice: string;
+}> {
+  const response = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content: `You are a job market analyst. Provide realistic market insights for a given role and location. Return ONLY valid JSON:
+{
+  "avg_salary": "$60,000 - $90,000",
+  "demand_level": "high",
+  "top_skills": ["skill1", "skill2"],
+  "trending": true,
+  "openings_count": 1500,
+  "salary_trend": "rising",
+  "competing_roles": ["similar role 1"],
+  "advice": "2-3 sentences of career advice"
+}`,
+      },
+      {
+        role: 'user',
+        content: `Role: ${role}\nLocation: ${location}`,
+      },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.6,
+  });
+
+  return JSON.parse(response.choices[0].message.content || '{}');
+}
+
+export async function scoreJobOffer(offer: {
+  company: string; role: string; salary: number; currency: string;
+  benefits: string[]; remote_policy: string; pto_days?: number;
+}): Promise<{ score: number; breakdown: { category: string; score: number; notes: string }[]; verdict: string }> {
+  const response = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [
+      {
+        role: 'system',
+        content: `Score a job offer on a 0-100 scale. Return ONLY valid JSON:
+{
+  "score": 78,
+  "breakdown": [
+    {"category": "Compensation", "score": 80, "notes": "above market rate"},
+    {"category": "Benefits", "score": 70, "notes": "standard package"},
+    {"category": "Work-Life Balance", "score": 85, "notes": "good PTO"},
+    {"category": "Growth Potential", "score": 75, "notes": "established company"}
+  ],
+  "verdict": "1-2 sentence overall assessment"
+}`,
+      },
+      {
+        role: 'user',
+        content: `Company: ${offer.company}\nRole: ${offer.role}\nSalary: ${offer.salary} ${offer.currency}\nBenefits: ${offer.benefits.join(', ')}\nRemote: ${offer.remote_policy}\nPTO: ${offer.pto_days || 'not specified'} days`,
+      },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.5,
+  });
+
+  return JSON.parse(response.choices[0].message.content || '{}');
+}

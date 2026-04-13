@@ -310,6 +310,71 @@ CREATE POLICY "Team admins can manage invites" ON team_invites FOR ALL USING (
   team_id IN (SELECT team_id FROM team_members WHERE user_id = auth.uid() AND role IN ('owner', 'admin'))
 );
 
+-- Contacts/CRM table
+CREATE TABLE IF NOT EXISTS contacts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL DEFAULT '',
+  email TEXT NOT NULL DEFAULT '',
+  company TEXT NOT NULL DEFAULT '',
+  role TEXT NOT NULL DEFAULT '',
+  linkedin_url TEXT,
+  phone TEXT,
+  notes TEXT NOT NULL DEFAULT '',
+  tags TEXT[] DEFAULT '{}',
+  last_contacted TIMESTAMPTZ,
+  next_follow_up TIMESTAMPTZ,
+  source TEXT NOT NULL DEFAULT 'other' CHECK (source IN ('linkedin', 'referral', 'recruiter', 'networking', 'other')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own contacts" ON contacts FOR ALL USING (auth.uid() = user_id);
+CREATE TRIGGER contacts_updated_at BEFORE UPDATE ON contacts FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Documents table
+CREATE TABLE IF NOT EXISTS documents (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL DEFAULT 'other' CHECK (type IN ('offer_letter', 'contract', 'certificate', 'reference', 'other')),
+  file_url TEXT NOT NULL DEFAULT '',
+  file_size INTEGER DEFAULT 0,
+  job_id UUID REFERENCES jobs(id) ON DELETE SET NULL,
+  notes TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own documents" ON documents FOR ALL USING (auth.uid() = user_id);
+
+-- Job Offers (for comparison)
+CREATE TABLE IF NOT EXISTS job_offers (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  job_id UUID REFERENCES jobs(id) ON DELETE SET NULL,
+  company TEXT NOT NULL DEFAULT '',
+  role TEXT NOT NULL DEFAULT '',
+  salary NUMERIC DEFAULT 0,
+  currency TEXT DEFAULT 'USD',
+  bonus NUMERIC,
+  equity TEXT,
+  benefits TEXT[] DEFAULT '{}',
+  remote_policy TEXT DEFAULT 'onsite' CHECK (remote_policy IN ('remote', 'hybrid', 'onsite')),
+  pto_days INTEGER,
+  commute_time INTEGER,
+  start_date DATE,
+  deadline DATE,
+  pros TEXT[] DEFAULT '{}',
+  cons TEXT[] DEFAULT '{}',
+  score INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE job_offers ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own offers" ON job_offers FOR ALL USING (auth.uid() = user_id);
+
 -- Auto-create gamification on signup (update existing function)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$

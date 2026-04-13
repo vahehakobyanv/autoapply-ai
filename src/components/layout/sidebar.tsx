@@ -8,7 +8,8 @@ import {
   LayoutDashboard, FileText, Briefcase, Kanban, Settings, CreditCard,
   LogOut, Zap, Menu, X, GraduationCap, CalendarDays, ScanSearch,
   Globe, Bot, Building2, Target, Trophy, Users, Upload, Mic, Mail,
-  Search, ChevronDown,
+  Search, ChevronDown, Wand2, UserCircle, FolderOpen, Scale,
+  TrendingUp, Linkedin, Download,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -31,8 +32,10 @@ const navSections = [
     label: 'Resume & Profile',
     items: [
       { href: '/resume', label: 'Resume', icon: FileText },
+      { href: '/resume-tailor', label: 'Tailor Resume', icon: Wand2 },
       { href: '/cv-import', label: 'CV Import', icon: Upload },
       { href: '/portfolio', label: 'Portfolio', icon: Globe },
+      { href: '/linkedin-optimizer', label: 'LinkedIn', icon: Linkedin },
     ],
   },
   {
@@ -41,6 +44,7 @@ const navSections = [
       { href: '/ats-score', label: 'ATS Score', icon: ScanSearch },
       { href: '/rejection-analysis', label: 'Why Rejected', icon: Target },
       { href: '/company-insights', label: 'Companies', icon: Building2 },
+      { href: '/market-insights', label: 'Market Insights', icon: TrendingUp },
       { href: '/interview-prep', label: 'Interview Prep', icon: GraduationCap },
       { href: '/interview-simulator', label: 'Mock Interview', icon: Mic },
       { href: '/follow-up', label: 'Follow-Up Emails', icon: Mail },
@@ -49,6 +53,9 @@ const navSections = [
   {
     label: 'More',
     items: [
+      { href: '/offers', label: 'Compare Offers', icon: Scale },
+      { href: '/contacts', label: 'Contacts CRM', icon: UserCircle },
+      { href: '/documents', label: 'Documents', icon: FolderOpen },
       { href: '/gamification', label: 'Progress', icon: Trophy },
       { href: '/teams', label: 'Teams', icon: Users },
       { href: '/payments', label: 'Billing', icon: CreditCard },
