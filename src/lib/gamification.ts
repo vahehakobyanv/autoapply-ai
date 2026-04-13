@@ -14,8 +14,9 @@ const XP_REWARDS: Record<string, number> = {
   follow_up_generated: 10,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function awardXP(
-  supabase: { from: (table: string) => ReturnType<typeof import('@supabase/supabase-js').createClient>['from'] },
+  supabase: any,
   userId: string,
   action: keyof typeof XP_REWARDS
 ) {
@@ -23,8 +24,7 @@ export async function awardXP(
   if (!amount) return;
 
   try {
-    // Get current gamification
-    const { data: gamification } = await (supabase as ReturnType<typeof import('@supabase/supabase-js').createClient>)
+    const { data: gamification } = await supabase
       .from('user_gamification')
       .select('*')
       .eq('user_id', userId)
@@ -35,7 +35,6 @@ export async function awardXP(
     const newXp = (gamification.xp || 0) + amount;
     const newLevel = Math.floor(newXp / 200) + 1;
 
-    // Update streak
     const today = new Date().toISOString().split('T')[0];
     let streakDays = gamification.streak_days || 0;
     const lastActive = gamification.last_active_date;
@@ -47,7 +46,7 @@ export async function awardXP(
       streakDays = lastActive === yesterdayStr ? streakDays + 1 : 1;
     }
 
-    await (supabase as ReturnType<typeof import('@supabase/supabase-js').createClient>)
+    await supabase
       .from('user_gamification')
       .update({
         xp: newXp,
