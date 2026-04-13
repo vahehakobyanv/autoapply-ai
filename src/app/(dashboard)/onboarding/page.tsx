@@ -79,6 +79,9 @@ export default function OnboardingPage() {
       return;
     }
 
+    // Send welcome notification (fire and forget)
+    fetch('/api/welcome', { method: 'POST' }).catch(() => {});
+
     router.push('/dashboard');
     router.refresh();
   };
