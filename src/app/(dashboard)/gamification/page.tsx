@@ -9,6 +9,7 @@ import {
   Trophy, Flame, Star, Zap, Loader2, Lock, CheckCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { fireAchievementConfetti } from '@/components/ui/confetti';
 
 interface GamificationData {
   xp: number;
@@ -65,6 +66,7 @@ export default function GamificationPage() {
       const result = await res.json();
 
       if (result.new_achievements?.length > 0) {
+        fireAchievementConfetti();
         result.new_achievements.forEach((a: { icon: string; name: string; xp: number }) => {
           toast.success(`${a.icon} Achievement Unlocked: ${a.name} (+${a.xp} XP)`);
         });
