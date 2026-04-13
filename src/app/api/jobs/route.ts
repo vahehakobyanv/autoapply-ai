@@ -52,12 +52,12 @@ export async function POST(request: Request) {
         .from('jobs')
         .insert({
           user_id: user.id,
-          title: parsed.title,
-          company: parsed.company,
-          description: parsed.description,
-          requirements: parsed.requirements,
-          salary: parsed.salary,
-          location: parsed.location,
+          title: parsed.title || 'Untitled',
+          company: parsed.company || '',
+          description: parsed.description || '',
+          requirements: parsed.requirements || '',
+          salary: parsed.salary || null,
+          location: parsed.location || null,
           url: body.url,
           source,
         })

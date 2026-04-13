@@ -46,9 +46,9 @@ export async function POST(req: NextRequest) {
         .insert({
           user_id: user.id,
           title: jobData.title || 'Untitled Job',
-          company: jobData.company,
-          description: jobData.description,
-          requirements: jobData.requirements,
+          company: jobData.company || '',
+          description: jobData.description || '',
+          requirements: jobData.requirements || '',
           url: url || '',
           source: url?.includes('hh.ru') ? 'hh.ru' : url?.includes('staff.am') ? 'staff.am' : 'manual',
           salary: jobData.salary,
