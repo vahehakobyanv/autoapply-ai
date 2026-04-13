@@ -24,7 +24,7 @@ export default function ResumePage() {
   const [activeResume, setActiveResume] = useState<Resume | null>(null);
   const [content, setContent] = useState<ResumeContent>(emptyContent);
   const [language, setLanguage] = useState<'en' | 'ru'>('en');
-  const [template, setTemplate] = useState<'modern' | 'simple'>('modern');
+  const [template, setTemplate] = useState<string>('modern');
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState('edit');
@@ -128,13 +128,16 @@ export default function ResumePage() {
               <SelectItem value="ru">Русский</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={template} onValueChange={(v) => { if (v) setTemplate(v as 'modern' | 'simple'); }}>
-            <SelectTrigger className="w-32">
+          <Select value={template} onValueChange={(v) => { if (v) setTemplate(v); }}>
+            <SelectTrigger className="w-36">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="modern">Modern</SelectItem>
               <SelectItem value="simple">Simple</SelectItem>
+              <SelectItem value="executive">Executive</SelectItem>
+              <SelectItem value="creative">Creative</SelectItem>
+              <SelectItem value="minimal">Minimal</SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={generateResume} disabled={generating}>
@@ -393,11 +396,11 @@ export default function ResumePage() {
             </Button>
           </div>
           <div ref={previewRef}>
-            {template === 'modern' ? (
-              <ModernTemplate content={content} />
-            ) : (
-              <SimpleTemplate content={content} />
-            )}
+            {template === 'modern' && <ModernTemplate content={content} />}
+            {template === 'simple' && <SimpleTemplate content={content} />}
+            {template === 'executive' && <ExecutiveTemplate content={content} />}
+            {template === 'creative' && <CreativeTemplate content={content} />}
+            {template === 'minimal' && <MinimalTemplate content={content} />}
           </div>
         </TabsContent>
       </Tabs>
@@ -549,6 +552,213 @@ function SimpleTemplate({ content }: { content: ResumeContent }) {
           <h2 className="font-bold mb-2">LANGUAGES</h2>
           <p className="text-sm">{content.languages.join(', ')}</p>
         </>
+      )}
+    </div>
+  );
+}
+
+function ExecutiveTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black overflow-hidden">
+      <div className="bg-slate-900 text-white px-8 py-8">
+        <h1 className="text-3xl font-light tracking-wide">{content.name || 'Your Name'}</h1>
+        <p className="text-slate-300 text-lg mt-1">{content.role || 'Your Role'}</p>
+        <div className="flex gap-6 text-sm text-slate-400 mt-3">
+          {content.email && <span>{content.email}</span>}
+          {content.phone && <span>{content.phone}</span>}
+          {content.location && <span>{content.location}</span>}
+        </div>
+      </div>
+      <div className="p-8 space-y-6">
+        {content.summary && (
+          <div className="border-l-4 border-slate-900 pl-4">
+            <p className="text-sm text-slate-700 italic leading-relaxed">{content.summary}</p>
+          </div>
+        )}
+        {content.experience.length > 0 && (
+          <div>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Professional Experience</h2>
+            {content.experience.map((exp, i) => (
+              <div key={i} className="mb-5">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="font-bold text-slate-900">{exp.title}</h3>
+                  <span className="text-xs text-slate-500">{exp.startDate} - {exp.endDate}</span>
+                </div>
+                <p className="text-sm text-slate-500 font-medium">{exp.company}</p>
+                <p className="text-sm text-slate-600 mt-1 leading-relaxed">{exp.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="grid grid-cols-2 gap-8">
+          {content.education.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Education</h2>
+              {content.education.map((edu, i) => (
+                <div key={i} className="mb-2">
+                  <p className="font-semibold text-sm">{edu.degree}</p>
+                  <p className="text-xs text-slate-500">{edu.institution} · {edu.year}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          <div>
+            {content.skills.length > 0 && (
+              <div className="mb-4">
+                <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Core Competencies</h2>
+                <div className="flex flex-wrap gap-1.5">
+                  {content.skills.map((s, i) => (
+                    <span key={i} className="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded">{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {content.languages.length > 0 && (
+              <div>
+                <h2 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Languages</h2>
+                <p className="text-sm text-slate-600">{content.languages.join(' · ')}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CreativeTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black overflow-hidden">
+      <div className="grid grid-cols-3">
+        {/* Left sidebar */}
+        <div className="bg-indigo-600 text-white p-6 space-y-6">
+          <div>
+            <h1 className="text-xl font-bold">{content.name || 'Your Name'}</h1>
+            <p className="text-indigo-200 text-sm mt-1">{content.role || 'Your Role'}</p>
+          </div>
+          <div className="space-y-2 text-sm text-indigo-100">
+            {content.email && <p>{content.email}</p>}
+            {content.phone && <p>{content.phone}</p>}
+            {content.location && <p>{content.location}</p>}
+          </div>
+          {content.skills.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-wider mb-2 text-indigo-200">Skills</h2>
+              <div className="space-y-1.5">
+                {content.skills.map((s, i) => (
+                  <div key={i} className="text-sm">
+                    <span>{s}</span>
+                    <div className="w-full bg-indigo-500 rounded-full h-1.5 mt-1">
+                      <div className="bg-white rounded-full h-1.5" style={{ width: `${75 + Math.random() * 25}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {content.languages.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-wider mb-2 text-indigo-200">Languages</h2>
+              <div className="space-y-1 text-sm">{content.languages.map((l, i) => <p key={i}>{l}</p>)}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Right content */}
+        <div className="col-span-2 p-6 space-y-5">
+          {content.summary && (
+            <div>
+              <h2 className="text-sm font-bold text-indigo-600 uppercase mb-2">About Me</h2>
+              <p className="text-sm text-slate-600 leading-relaxed">{content.summary}</p>
+            </div>
+          )}
+          {content.experience.length > 0 && (
+            <div>
+              <h2 className="text-sm font-bold text-indigo-600 uppercase mb-3">Experience</h2>
+              {content.experience.map((exp, i) => (
+                <div key={i} className="mb-4 relative pl-4 border-l-2 border-indigo-200">
+                  <div className="absolute -left-1.5 top-1 h-2.5 w-2.5 rounded-full bg-indigo-600" />
+                  <h3 className="font-semibold text-sm">{exp.title}</h3>
+                  <p className="text-xs text-indigo-500">{exp.company} · {exp.startDate} - {exp.endDate}</p>
+                  <p className="text-xs text-slate-600 mt-1">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {content.education.length > 0 && (
+            <div>
+              <h2 className="text-sm font-bold text-indigo-600 uppercase mb-2">Education</h2>
+              {content.education.map((edu, i) => (
+                <div key={i} className="mb-2">
+                  <p className="font-semibold text-sm">{edu.degree}</p>
+                  <p className="text-xs text-slate-500">{edu.institution} · {edu.year}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MinimalTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white p-8 shadow-lg rounded-lg max-w-[800px] mx-auto text-black">
+      <div className="mb-8">
+        <h1 className="text-2xl font-light text-slate-900">{content.name || 'Your Name'}</h1>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-slate-500">{content.role || 'Your Role'}</span>
+          {content.location && <><span className="text-slate-300">·</span><span className="text-slate-500 text-sm">{content.location}</span></>}
+        </div>
+        <div className="text-xs text-slate-400 mt-1">
+          {[content.email, content.phone].filter(Boolean).join(' · ')}
+        </div>
+      </div>
+
+      {content.summary && (
+        <p className="text-sm text-slate-500 mb-8 max-w-xl leading-relaxed">{content.summary}</p>
+      )}
+
+      {content.experience.length > 0 && (
+        <div className="mb-8">
+          {content.experience.map((exp, i) => (
+            <div key={i} className="grid grid-cols-[140px_1fr] gap-4 mb-4">
+              <div className="text-xs text-slate-400 pt-0.5">
+                {exp.startDate}<br />{exp.endDate}
+              </div>
+              <div>
+                <h3 className="font-medium text-sm">{exp.title}</h3>
+                <p className="text-xs text-slate-400">{exp.company}</p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{exp.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {content.education.length > 0 && (
+        <div className="mb-8">
+          {content.education.map((edu, i) => (
+            <div key={i} className="grid grid-cols-[140px_1fr] gap-4 mb-2">
+              <div className="text-xs text-slate-400">{edu.year}</div>
+              <div>
+                <p className="text-sm font-medium">{edu.degree}</p>
+                <p className="text-xs text-slate-400">{edu.institution}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {content.skills.length > 0 && (
+        <div className="mb-4">
+          <p className="text-xs text-slate-400">{content.skills.join(' · ')}</p>
+        </div>
+      )}
+
+      {content.languages.length > 0 && (
+        <p className="text-xs text-slate-400">{content.languages.join(' · ')}</p>
       )}
     </div>
   );

@@ -17,7 +17,7 @@ export interface Resume {
   title: string;
   content: ResumeContent;
   language: 'en' | 'ru';
-  template: 'modern' | 'simple';
+  template: 'modern' | 'simple' | 'executive' | 'creative' | 'minimal';
   created_at: string;
   updated_at: string;
 }

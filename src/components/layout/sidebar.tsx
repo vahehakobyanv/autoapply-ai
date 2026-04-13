@@ -15,6 +15,7 @@ import {
   Zap,
   Menu,
   X,
+  GraduationCap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -25,6 +26,7 @@ const navItems = [
   { href: '/resume', label: 'Resume', icon: FileText },
   { href: '/jobs', label: 'Jobs', icon: Briefcase },
   { href: '/tracker', label: 'Tracker', icon: Kanban },
+  { href: '/interview-prep', label: 'Interview Prep', icon: GraduationCap },
   { href: '/payments', label: 'Billing', icon: CreditCard },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
