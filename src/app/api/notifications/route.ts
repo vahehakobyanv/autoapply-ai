@@ -1,12 +1,13 @@
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-// Notification service - supports email and Telegram
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+
 async function sendTelegramNotification(chatId: string, message: string): Promise<boolean> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) return false;
+  if (!BOT_TOKEN || !chatId) return false;
 
   try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -21,29 +22,50 @@ async function sendTelegramNotification(chatId: string, message: string): Promis
   }
 }
 
+// Send notification to a user (looks up their telegram_chat_id automatically)
 export async function POST(request: Request) {
+  const supabase = await createServerSupabaseClient();
   const { type, userId, data } = await request.json();
 
+  // Look up user's telegram chat ID
+  let chatId = data?.telegramChatId;
+  if (!chatId && userId) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('telegram_chat_id')
+      .eq('user_id', userId)
+      .single();
+    chatId = profile?.telegram_chat_id;
+  }
+
   let message = '';
+  let emoji = '';
 
   switch (type) {
     case 'application_sent':
-      message = `Application sent to <b>${data.company}</b> for <b>${data.title}</b>`;
+      emoji = '📨';
+      message = `${emoji} <b>Application Sent!</b>\n\nPosition: <b>${data.title}</b>\nCompany: ${data.company}`;
       break;
     case 'new_job_found':
-      message = `New job found: <b>${data.title}</b> at <b>${data.company}</b>`;
+      emoji = '🔍';
+      message = `${emoji} <b>New Job Found!</b>\n\nPosition: <b>${data.title}</b>\nCompany: ${data.company}${data.url ? '\n\n🔗 ' + data.url : ''}`;
       break;
     case 'interview_reminder':
-      message = `Interview reminder: <b>${data.title}</b> at <b>${data.company}</b> on ${data.date}`;
+      emoji = '📅';
+      message = `${emoji} <b>Interview Reminder!</b>\n\nPosition: <b>${data.title}</b>\nCompany: ${data.company}\nDate: ${data.date}`;
+      break;
+    case 'status_update':
+      emoji = '📊';
+      message = `${emoji} <b>Status Update</b>\n\n<b>${data.title}</b> at ${data.company}\nNew status: ${data.status}`;
       break;
     default:
       return NextResponse.json({ error: 'Invalid notification type' }, { status: 400 });
   }
 
-  // Send via Telegram if configured
-  if (data.telegramChatId) {
-    await sendTelegramNotification(data.telegramChatId, message);
+  let sent = false;
+  if (chatId) {
+    sent = await sendTelegramNotification(chatId, message);
   }
 
-  return NextResponse.json({ success: true, message });
+  return NextResponse.json({ success: true, telegramSent: sent });
 }
