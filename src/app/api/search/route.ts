@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     // Filter applications client-side (job join makes ilike complex)
     const apps = (appsRes.data || []).filter(a => {
-      const job = a.job as Record<string, string> | null;
+      const job = a.job as unknown as Record<string, string> | null;
       return job?.title?.toLowerCase().includes(q) || job?.company?.toLowerCase().includes(q);
     }).slice(0, 10);
 
