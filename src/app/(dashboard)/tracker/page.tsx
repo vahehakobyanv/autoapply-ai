@@ -25,6 +25,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Building2, ExternalLink, FileText, MessageSquare, Loader2, Sparkles, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import type { Application, ApplicationStatus } from '@/types';
 
 const COLUMNS: { id: ApplicationStatus; label: string; color: string }[] = [
@@ -39,6 +40,7 @@ export default function TrackerPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
   const [generatingCL, setGeneratingCL] = useState(false);
@@ -292,16 +294,7 @@ export default function TrackerPage() {
                   variant="outline"
                   size="sm"
                   className="ml-auto text-red-500 hover:text-red-700 hover:bg-red-50"
-                  onClick={async () => {
-                    try {
-                      const res = await fetch(`/api/applications?id=${selectedApp.id}`, { method: 'DELETE' });
-                      const data = await res.json();
-                      if (data.error) throw new Error(data.error);
-                      setApplications((prev) => prev.filter((a) => a.id !== selectedApp.id));
-                      setSelectedApp(null);
-                      toast.success('Application removed');
-                    } catch { toast.error('Failed to delete'); }
-                  }}
+                  onClick={() => setDeleteConfirm(selectedApp.id)}
                 >
                   <Trash2 className="h-4 w-4 mr-1" />
                   Delete
@@ -311,6 +304,22 @@ export default function TrackerPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={!!deleteConfirm}
+        onOpenChange={(open) => !open && setDeleteConfirm(null)}
+        title="Delete Application"
+        description="This will permanently remove this application and its data. This action cannot be undone."
+        onConfirm={async () => {
+          if (!deleteConfirm) return;
+          const res = await fetch(`/api/applications?id=${deleteConfirm}`, { method: 'DELETE' });
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          setApplications((prev) => prev.filter((a) => a.id !== deleteConfirm));
+          setSelectedApp(null);
+          toast.success('Application removed');
+        }}
+      />
     </div>
   );
 }

@@ -11,25 +11,27 @@ import {
   Sparkles,
   Target,
 } from 'lucide-react';
+import { TypingAnimation } from '@/components/ui/typing-animation';
+import { AnimatedCounter } from '@/components/ui/animated-counter';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       {/* Navbar */}
-      <nav className="border-b bg-white/80 backdrop-blur-sm fixed top-0 w-full z-50">
+      <nav className="border-b bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm fixed top-0 w-full z-50">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Zap className="h-7 w-7 text-blue-600" />
             <span className="text-xl font-bold">AutoApply AI</span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#features" className="text-slate-600 hover:text-slate-900">Features</a>
-            <a href="#how-it-works" className="text-slate-600 hover:text-slate-900">How It Works</a>
-            <a href="#pricing" className="text-slate-600 hover:text-slate-900">Pricing</a>
-            <a href="#testimonials" className="text-slate-600 hover:text-slate-900">Testimonials</a>
+            <a href="#features" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Features</a>
+            <a href="#how-it-works" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">How It Works</a>
+            <Link href="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Pricing</Link>
+            <Link href="/success-stories" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Success Stories</Link>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm text-slate-600 hover:text-slate-900">
+            <Link href="/login" className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
               Log In
             </Link>
             <Link
@@ -43,19 +45,24 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-32 pb-20 px-4 bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900 dark:to-slate-950">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-sm px-4 py-1.5 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-sm px-4 py-1.5 rounded-full mb-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <Sparkles className="h-4 w-4" />
             Powered by AI &mdash; Optimized for hh.ru &amp; staff.am
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-slate-900 mb-6">
-            Apply to{' '}
-            <span className="text-blue-600">100 Jobs</span>
-            <br />
-            in 1 Click with AI
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            AI that{' '}
+            <span className="text-blue-600">
+              <TypingAnimation
+                texts={['writes your resume', 'applies to jobs', 'preps your interview', 'negotiates salary', 'tracks applications']}
+                speed={70}
+                deleteSpeed={35}
+                pauseTime={1500}
+              />
+            </span>
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
             AutoApply AI finds jobs, generates tailored resumes and cover letters, and submits
             applications automatically. Stop wasting hours — let AI handle the busywork.
           </p>
@@ -78,9 +85,9 @@ export default function LandingPage() {
           </p>
 
           {/* Social Proof */}
-          <div className="flex items-center justify-center gap-6 mt-8 pt-6 border-t border-slate-100">
+          <div className="flex items-center justify-center gap-6 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 animate-in fade-in duration-1000 delay-500">
             <div className="text-center">
-              <p className="text-2xl font-bold text-slate-900">2,847</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-white"><AnimatedCounter value={50847} duration={2000} /></p>
               <p className="text-xs text-slate-500">Applications Sent</p>
             </div>
             <div className="h-8 w-px bg-slate-200" />
