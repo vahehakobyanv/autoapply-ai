@@ -1,6 +1,9 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { generateResume } from '@/lib/ai';
+import { generateResume, parseJobDescription } from '@/lib/ai';
 import { NextResponse } from 'next/server';
+import Groq from 'groq-sdk';
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
 
 export async function GET() {
   const supabase = await createServerSupabaseClient();
@@ -32,7 +35,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { language = 'en', template = 'modern', generateWithAI = false } = body;
+  const { language = 'en', template = 'modern', generateWithAI = false, jobDescription, jobUrl } = body;
 
   let content = body.content || {};
 
@@ -48,19 +51,60 @@ export async function POST(request: Request) {
     }
 
     try {
-      const generated = await generateResume(
-        {
-          name: profile.name,
-          role: profile.role,
-          skills: profile.skills,
-          experience: profile.experience,
-          languages: profile.languages,
-          location: profile.location,
-        },
-        language
-      );
-      content = JSON.parse(generated);
-    } catch (err) {
+      // If job URL provided, fetch and parse it first
+      let jobContext = jobDescription || '';
+      if (jobUrl && !jobContext) {
+        try {
+          const response = await fetch(jobUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+          const html = await response.text();
+          const parsed = await parseJobDescription(html);
+          jobContext = `${parsed.title} at ${parsed.company}. ${parsed.description}. Requirements: ${parsed.requirements}`;
+        } catch { /* use empty job context */ }
+      }
+
+      if (jobContext) {
+        // Generate resume TAILORED to the job description
+        const langLabel = language === 'ru' ? 'Russian' : language === 'hy' ? 'Armenian' : 'English';
+        const res = await groq.chat.completions.create({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a professional resume writer. Generate a resume in ${langLabel} TAILORED to the provided job description. Highlight matching skills, use keywords from the job, and emphasize relevant experience. Return ONLY valid JSON:
+{
+  "name": "string", "role": "string matching the job title", "email": "", "phone": "", "location": "string",
+  "summary": "2-3 sentence summary tailored to this specific job",
+  "experience": [{"title": "string", "company": "string", "startDate": "string", "endDate": "string", "description": "string with keywords from the job"}],
+  "education": [{"degree": "string", "institution": "string", "year": "string"}],
+  "skills": ["prioritized skills matching the job requirements"],
+  "languages": ["string"]
+}`,
+            },
+            {
+              role: 'user',
+              content: `Candidate profile:\nName: ${profile.name}\nRole: ${profile.role}\nSkills: ${(profile.skills || []).join(', ')}\nExperience: ${profile.experience}\nLanguages: ${(profile.languages || []).join(', ')}\nLocation: ${profile.location}\n\nJOB DESCRIPTION TO TAILOR FOR:\n${jobContext.slice(0, 3000)}`,
+            },
+          ],
+          response_format: { type: 'json_object' },
+          temperature: 0.6,
+        });
+        content = JSON.parse(res.choices[0].message.content || '{}');
+      } else {
+        // Standard generation without job context
+        const generated = await generateResume(
+          {
+            name: profile.name,
+            role: profile.role,
+            skills: profile.skills,
+            experience: profile.experience,
+            languages: profile.languages,
+            location: profile.location,
+          },
+          language
+        );
+        content = JSON.parse(generated);
+      }
+    } catch {
       return NextResponse.json({ error: 'Failed to generate resume' }, { status: 500 });
     }
   }
@@ -69,7 +113,7 @@ export async function POST(request: Request) {
     .from('resumes')
     .insert({
       user_id: user.id,
-      title: `Resume - ${language.toUpperCase()}`,
+      title: (jobDescription || jobUrl) ? `Resume — ${(content as Record<string, string>).role || 'Tailored'} (${language.toUpperCase()})` : `Resume - ${language.toUpperCase()}`,
       content,
       language,
       template,

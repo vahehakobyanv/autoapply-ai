@@ -29,6 +29,9 @@ export default function ResumePage() {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState('edit');
+  const [jobDesc, setJobDesc] = useState('');
+  const [jobUrl, setJobUrl] = useState('');
+  const [showJobInput, setShowJobInput] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,20 +56,25 @@ export default function ResumePage() {
     }
   };
 
-  const generateResume = async () => {
+  const generateResume = async (fromJob = false) => {
     setGenerating(true);
     try {
       const res = await fetch('/api/resumes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language, template, generateWithAI: true }),
+        body: JSON.stringify({
+          language, template, generateWithAI: true,
+          ...(fromJob && jobDesc ? { jobDescription: jobDesc } : {}),
+          ...(fromJob && jobUrl ? { jobUrl } : {}),
+        }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setActiveResume(data);
-      setContent(data.content);
+      setContent(data.content || emptyContent);
       setResumes((prev) => [data, ...prev]);
-      toast.success('Resume generated!');
+      setShowJobInput(false);
+      toast.success(fromJob ? 'Resume tailored for the job!' : 'Resume generated!');
     } catch (err: any) {
       toast.error(err.message || 'Failed to generate resume');
     } finally {
@@ -168,12 +176,58 @@ export default function ResumePage() {
               <Link2 className="h-4 w-4 mr-1" /> Share Link
             </Button>
           )}
-          <Button onClick={generateResume} disabled={generating}>
+          <Button onClick={() => generateResume(false)} disabled={generating}>
             {generating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
             {generating ? 'Generating...' : 'Generate with AI'}
           </Button>
+          <Button variant="outline" onClick={() => setShowJobInput(!showJobInput)} disabled={generating}>
+            <FileText className="h-4 w-4 mr-2" />
+            From Job Description
+          </Button>
         </div>
       </div>
+
+      {/* Generate from Job Description */}
+      {showJobInput && (
+        <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-blue-950/10">
+          <CardContent className="pt-6 space-y-4">
+            <div>
+              <Label className="text-sm font-semibold">Generate Resume from Job</Label>
+              <p className="text-xs text-muted-foreground mb-3">Paste a job URL or description — AI creates a resume tailored with matching keywords, skills, and experience</p>
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Option 1: Job URL (hh.ru, staff.am, or any job page)</Label>
+              <Input
+                value={jobUrl}
+                onChange={(e) => setJobUrl(e.target.value)}
+                placeholder="https://hh.ru/vacancy/123456 or https://staff.am/jobs/..."
+                className="mt-1"
+              />
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t" /></div>
+              <div className="relative flex justify-center text-xs"><span className="bg-blue-50 dark:bg-slate-900 px-2 text-muted-foreground">or</span></div>
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Option 2: Paste Job Description</Label>
+              <Textarea
+                value={jobDesc}
+                onChange={(e) => setJobDesc(e.target.value)}
+                placeholder="Paste the full job description here — title, requirements, responsibilities, qualifications..."
+                rows={5}
+                className="mt-1"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={() => generateResume(true)} disabled={generating || (!jobDesc.trim() && !jobUrl.trim())} size="lg">
+                {generating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                {generating ? 'Generating Tailored Resume...' : 'Generate Tailored Resume'}
+              </Button>
+              <Button variant="ghost" onClick={() => setShowJobInput(false)}>Cancel</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Template Gallery */}
       <TemplateGallery selected={template} onSelect={(id) => setTemplate(id)} />
