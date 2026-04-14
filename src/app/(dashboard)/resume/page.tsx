@@ -36,16 +36,20 @@ export default function ResumePage() {
   }, []);
 
   const fetchResumes = async () => {
-    const res = await fetch('/api/resumes');
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      setResumes(data);
-      if (data.length > 0) {
-        setActiveResume(data[0]);
-        setContent(data[0].content);
-        setLanguage(data[0].language);
-        setTemplate(data[0].template);
+    try {
+      const res = await fetch('/api/resumes');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setResumes(data);
+        if (data.length > 0) {
+          setActiveResume(data[0]);
+          setContent(data[0].content || emptyContent);
+          setLanguage(data[0].language || 'en');
+          setTemplate(data[0].template || 'modern');
+        }
       }
+    } catch {
+      // Silent fail — page still works for creating new resumes
     }
   };
 
@@ -155,7 +159,7 @@ export default function ResumePage() {
               <SelectItem value="seoul">Seoul</SelectItem>
             </SelectContent>
           </Select>
-          {activeResume && (
+          {activeResume && typeof window !== 'undefined' && (
             <Button variant="outline" size="sm" onClick={() => {
               const url = `${window.location.origin}/r/${activeResume.id}`;
               navigator.clipboard.writeText(url);

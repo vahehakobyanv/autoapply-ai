@@ -22,7 +22,7 @@ CREATE TABLE resumes (
   title TEXT NOT NULL DEFAULT 'My Resume',
   content JSONB NOT NULL DEFAULT '{}',
   language TEXT NOT NULL DEFAULT 'en' CHECK (language IN ('en', 'ru')),
-  template TEXT NOT NULL DEFAULT 'modern' CHECK (template IN ('modern', 'simple')),
+  template TEXT NOT NULL DEFAULT 'modern',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
