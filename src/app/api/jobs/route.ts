@@ -48,6 +48,18 @@ export async function POST(request: Request) {
       if (body.url.includes('hh.ru')) source = 'hh.ru';
       else if (body.url.includes('staff.am')) source = 'staff.am';
 
+      // Duplicate detection
+      const { data: existing } = await supabase
+        .from('jobs')
+        .select('id, title')
+        .eq('user_id', user.id)
+        .eq('url', body.url)
+        .limit(1);
+
+      if (existing && existing.length > 0) {
+        return NextResponse.json({ ...existing[0], duplicate: true, message: 'This job is already saved' });
+      }
+
       const { data, error } = await supabase
         .from('jobs')
         .insert({

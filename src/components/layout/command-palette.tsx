@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   CommandDialog,
@@ -64,18 +64,79 @@ export function CommandPalette() {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
+  const [searchResults, setSearchResults] = useState<{ jobs: { id: string; title: string; company: string }[]; applications: { id: string; status: string; job: Record<string, string> | null }[]; contacts: { id: string; name: string; company: string }[] }>({ jobs: [], applications: [], contacts: [] });
+  const [query, setQuery] = useState('');
+
   const navigate = (href: string) => {
     router.push(href);
     setOpen(false);
+    setQuery('');
+    setSearchResults({ jobs: [], applications: [], contacts: [] });
+  };
+
+  const handleSearch = async (value: string) => {
+    setQuery(value);
+    if (value.length >= 2) {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(value)}`);
+        const data = await res.json();
+        if (!data.error) setSearchResults(data);
+      } catch {}
+    } else {
+      setSearchResults({ jobs: [], applications: [], contacts: [] });
+    }
   };
 
   const groups = [...new Set(pages.map((p) => p.group))];
+  const hasResults = searchResults.jobs.length > 0 || searchResults.applications.length > 0 || searchResults.contacts.length > 0;
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Search pages, tools, actions..." />
+    <CommandDialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setQuery(''); setSearchResults({ jobs: [], applications: [], contacts: [] }); } }}>
+      <CommandInput placeholder="Search pages, jobs, contacts..." value={query} onValueChange={handleSearch} />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
+
+        {/* Global search results */}
+        {hasResults && (
+          <>
+            {searchResults.jobs.length > 0 && (
+              <CommandGroup heading="Jobs">
+                {searchResults.jobs.map((job) => (
+                  <CommandItem key={job.id} onSelect={() => navigate('/jobs')} className="cursor-pointer">
+                    <Briefcase className="mr-2 h-4 w-4 text-blue-500" />
+                    <span>{job.title}</span>
+                    <span className="ml-auto text-xs text-muted-foreground">{job.company}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+            {searchResults.applications.length > 0 && (
+              <CommandGroup heading="Applications">
+                {searchResults.applications.map((app) => (
+                  <CommandItem key={app.id} onSelect={() => navigate('/tracker')} className="cursor-pointer">
+                    <Kanban className="mr-2 h-4 w-4 text-purple-500" />
+                    <span>{(app.job as Record<string, string>)?.title || 'Application'}</span>
+                    <span className="ml-auto text-xs text-muted-foreground capitalize">{app.status}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+            {searchResults.contacts.length > 0 && (
+              <CommandGroup heading="Contacts">
+                {searchResults.contacts.map((c) => (
+                  <CommandItem key={c.id} onSelect={() => navigate('/contacts')} className="cursor-pointer">
+                    <UserCircle className="mr-2 h-4 w-4 text-green-500" />
+                    <span>{c.name}</span>
+                    <span className="ml-auto text-xs text-muted-foreground">{c.company}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+            <CommandSeparator />
+          </>
+        )}
+
+        {/* Page navigation */}
         {groups.map((group, i) => (
           <div key={group}>
             {i > 0 && <CommandSeparator />}

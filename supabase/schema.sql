@@ -375,6 +375,25 @@ CREATE TABLE IF NOT EXISTS job_offers (
 ALTER TABLE job_offers ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can CRUD own offers" ON job_offers FOR ALL USING (auth.uid() = user_id);
 
+-- Calendar Events table
+CREATE TABLE IF NOT EXISTS calendar_events (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  event_date DATE NOT NULL,
+  event_type TEXT NOT NULL DEFAULT 'custom' CHECK (event_type IN ('interview', 'deadline', 'follow_up', 'custom')),
+  notes TEXT NOT NULL DEFAULT '',
+  job_id UUID REFERENCES jobs(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE calendar_events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own events" ON calendar_events FOR ALL USING (auth.uid() = user_id);
+
+-- Add tags and deadline columns to applications
+ALTER TABLE applications ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
+ALTER TABLE applications ADD COLUMN IF NOT EXISTS deadline DATE;
+
 -- Auto-create gamification on signup (update existing function)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$

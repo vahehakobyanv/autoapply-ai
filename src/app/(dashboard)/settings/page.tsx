@@ -8,8 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, Check, Share2, Send, Unlink, ExternalLink, Loader2 } from 'lucide-react';
+import { Copy, Check, Share2, Send, Unlink, ExternalLink, Loader2, Download, Trash2, AlertTriangle, Upload } from 'lucide-react';
 import { toast } from 'sonner';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import type { Profile } from '@/types';
 
 export default function SettingsPage() {
@@ -17,6 +18,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
   const [telegramStatus, setTelegramStatus] = useState<{
     connected: boolean;
     linkUrl?: string;
@@ -279,6 +281,82 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Import & Export */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Download className="h-5 w-5" /> Import & Export
+          </CardTitle>
+          <CardDescription>Import applications from CSV or export your data</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-3">
+            <a href="/api/export"><Button variant="outline"><Download className="h-4 w-4 mr-2" />Export Applications (CSV)</Button></a>
+            <Button variant="outline" onClick={async () => {
+              try {
+                const res = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'export_data' }) });
+                const data = await res.json();
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = 'autoapply-data.json'; a.click();
+                toast.success('Data exported!');
+              } catch { toast.error('Export failed'); }
+            }}><Download className="h-4 w-4 mr-2" />Export All Data (JSON)</Button>
+          </div>
+          <div>
+            <p className="text-sm font-medium mb-2">Import Applications from CSV</p>
+            <p className="text-xs text-muted-foreground mb-2">CSV should have columns: Job Title, Company, Status, Location, Salary, URL, Notes</p>
+            <input type="file" accept=".csv" className="text-sm" onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const formData = new FormData();
+              formData.append('file', file);
+              try {
+                const res = await fetch('/api/import-csv', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+                toast.success(`Imported ${data.imported} of ${data.total} applications!`);
+              } catch (err) { toast.error(err instanceof Error ? err.message : 'Import failed'); }
+            }} />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Danger Zone */}
+      <Card className="border-red-200 dark:border-red-900">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-red-600">
+            <AlertTriangle className="h-5 w-5" /> Danger Zone
+          </CardTitle>
+          <CardDescription>Irreversible actions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between p-3 border border-red-200 dark:border-red-900 rounded-lg">
+            <div>
+              <p className="font-medium text-sm">Delete Account</p>
+              <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
+            </div>
+            <Button variant="destructive" size="sm" onClick={() => setShowDeleteAccount(true)}>
+              <Trash2 className="h-4 w-4 mr-1" /> Delete Account
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <ConfirmDialog
+        open={showDeleteAccount}
+        onOpenChange={setShowDeleteAccount}
+        title="Delete Account"
+        description="This will permanently delete your account, all applications, resumes, contacts, and data. This action CANNOT be undone."
+        confirmText="Delete My Account"
+        onConfirm={async () => {
+          const res = await fetch('/api/account', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete_account' }) });
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          window.location.href = '/login';
+        }}
+      />
     </div>
   );
 }

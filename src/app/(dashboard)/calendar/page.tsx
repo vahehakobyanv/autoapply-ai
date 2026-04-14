@@ -4,8 +4,14 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ChevronLeft, ChevronRight, Loader2, Plus, Download, Calendar as CalIcon, X } from 'lucide-react';
+import { toast } from 'sonner';
 import type { Application } from '@/types';
+
+interface CalendarEvent {
+  id: string; title: string; event_date: string; event_type: string; notes: string;
+}
 
 const STATUS_COLORS: Record<string, string> = {
   saved: 'bg-slate-200 text-slate-700',
@@ -17,15 +23,47 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function CalendarPage() {
   const [applications, setApplications] = useState<Application[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [showAddEvent, setShowAddEvent] = useState(false);
+  const [newEvent, setNewEvent] = useState({ title: '', event_date: '', event_type: 'custom', notes: '' });
 
   useEffect(() => {
-    fetch('/api/applications')
-      .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setApplications(d); })
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetch('/api/applications').then(r => r.json()),
+      fetch('/api/calendar-events').then(r => r.json()),
+    ]).then(([apps, evts]) => {
+      if (Array.isArray(apps)) setApplications(apps);
+      if (Array.isArray(evts)) setEvents(evts);
+    }).finally(() => setLoading(false));
   }, []);
+
+  const addEvent = async () => {
+    if (!newEvent.title || !newEvent.event_date) { toast.error('Title and date required'); return; }
+    try {
+      const res = await fetch('/api/calendar-events', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newEvent),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setEvents(prev => [...prev, data]);
+      setShowAddEvent(false);
+      setNewEvent({ title: '', event_date: '', event_type: 'custom', notes: '' });
+      toast.success('Event added!');
+    } catch { toast.error('Failed to add event'); }
+  };
+
+  const deleteEvent = async (id: string) => {
+    await fetch('/api/calendar-events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', id }) });
+    setEvents(prev => prev.filter(e => e.id !== id));
+    toast.success('Event removed');
+  };
+
+  const exportICS = () => {
+    window.open('/api/calendar-events?action=ics', '_blank');
+  };
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -67,10 +105,55 @@ export default function CalendarPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Application Calendar</h1>
-        <p className="text-muted-foreground">Track your applications and interviews over time</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Application Calendar</h1>
+          <p className="text-muted-foreground">Track your applications and interviews over time</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={exportICS}><Download className="h-4 w-4 mr-1" />Export .ics</Button>
+          <Button size="sm" onClick={() => setShowAddEvent(!showAddEvent)}><Plus className="h-4 w-4 mr-1" />Add Event</Button>
+        </div>
       </div>
+
+      {showAddEvent && (
+        <Card>
+          <CardContent className="pt-4 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <Input placeholder="Event title *" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} />
+              <Input type="date" value={newEvent.event_date} onChange={e => setNewEvent({...newEvent, event_date: e.target.value})} />
+              <div className="flex gap-1">
+                {['interview', 'deadline', 'follow_up', 'custom'].map(t => (
+                  <Button key={t} size="sm" variant={newEvent.event_type === t ? 'default' : 'outline'} onClick={() => setNewEvent({...newEvent, event_type: t})} className="capitalize text-xs">{t.replace('_', ' ')}</Button>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" onClick={addEvent}><Plus className="h-3 w-3 mr-1" />Add</Button>
+                <Button size="sm" variant="ghost" onClick={() => setShowAddEvent(false)}><X className="h-3 w-3" /></Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Custom Events */}
+      {events.length > 0 && (
+        <Card>
+          <CardHeader><CardTitle className="text-base flex items-center gap-2"><CalIcon className="h-4 w-4" />Upcoming Events</CardTitle></CardHeader>
+          <CardContent className="space-y-2">
+            {events.map(evt => (
+              <div key={evt.id} className="flex items-center justify-between p-2 border rounded-lg">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="capitalize text-xs">{evt.event_type.replace('_', ' ')}</Badge>
+                  <span className="text-sm font-medium">{evt.title}</span>
+                  <span className="text-xs text-muted-foreground">{evt.event_date}</span>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => deleteEvent(evt.id)}><X className="h-3 w-3" /></Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
