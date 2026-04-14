@@ -10,6 +10,7 @@ import {
   Globe, Bot, Building2, Target, Trophy, Users, Upload, Mic, Mail,
   Search, ChevronDown, Wand2, UserCircle, FolderOpen, Scale,
   TrendingUp, Link2, Download, DollarSign, BarChart3, Sparkles,
+  MapPin,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
@@ -52,6 +53,10 @@ const navSections = [
       { href: '/salary-negotiation', label: 'Negotiate Salary', icon: DollarSign },
       { href: '/skill-gaps', label: 'Skill Gaps', icon: Target },
       { href: '/career-path', label: 'Career Path', icon: TrendingUp },
+      { href: '/voice-interview', label: 'Voice Practice', icon: Mic },
+      { href: '/reference-letter', label: 'Reference Letter', icon: FileText },
+      { href: '/skill-quiz', label: 'Skill Quiz', icon: Bot },
+      { href: '/relocation', label: 'Relocation Calc', icon: MapPin },
     ],
   },
   {
