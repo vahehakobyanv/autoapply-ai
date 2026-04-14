@@ -14,6 +14,14 @@ const TEMPLATES = [
   { id: 'elegant', name: 'Elegant', colors: ['#c9a96e', '#fffbeb'], desc: 'Serif, gold accents' },
   { id: 'compact', name: 'Compact', colors: ['#3b82f6', '#f8fafc'], desc: 'Dense, one-page' },
   { id: 'bold', name: 'Bold', colors: ['#7c3aed', '#f5f3ff'], desc: 'Gradient, large type' },
+  { id: 'berlin', name: 'Berlin', colors: ['#0d9488', '#f0fdfa'], desc: 'Teal sidebar, skill dots' },
+  { id: 'tokyo', name: 'Tokyo', colors: ['#dc2626', '#ffffff'], desc: 'Red accent, minimal' },
+  { id: 'stockholm', name: 'Stockholm', colors: ['#2563eb', '#eff6ff'], desc: 'Blue sidebar, skill bars' },
+  { id: 'amsterdam', name: 'Amsterdam', colors: ['#ea580c', '#fff7ed'], desc: 'Orange, timeline dots' },
+  { id: 'dubai', name: 'Dubai', colors: ['#18181b', '#d4a853'], desc: 'Black & gold, luxury' },
+  { id: 'milan', name: 'Milan', colors: ['#f43f5e', '#fff1f2'], desc: 'Fashion, thin fonts' },
+  { id: 'vancouver', name: 'Vancouver', colors: ['#16a34a', '#f0fdf4'], desc: 'Green, card-based' },
+  { id: 'seoul', name: 'Seoul', colors: ['#a855f7', '#faf5ff'], desc: 'Purple/pink, K-style' },
 ];
 
 interface TemplateGalleryProps {

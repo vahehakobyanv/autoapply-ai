@@ -145,6 +145,14 @@ export default function ResumePage() {
               <SelectItem value="elegant">Elegant</SelectItem>
               <SelectItem value="compact">Compact</SelectItem>
               <SelectItem value="bold">Bold</SelectItem>
+              <SelectItem value="berlin">Berlin</SelectItem>
+              <SelectItem value="tokyo">Tokyo</SelectItem>
+              <SelectItem value="stockholm">Stockholm</SelectItem>
+              <SelectItem value="amsterdam">Amsterdam</SelectItem>
+              <SelectItem value="dubai">Dubai</SelectItem>
+              <SelectItem value="milan">Milan</SelectItem>
+              <SelectItem value="vancouver">Vancouver</SelectItem>
+              <SelectItem value="seoul">Seoul</SelectItem>
             </SelectContent>
           </Select>
           {activeResume && (
@@ -425,6 +433,14 @@ export default function ResumePage() {
             {template === 'bold' && <BoldTemplate content={content} />}
             {template === 'creative' && <CreativeTemplate content={content} />}
             {template === 'minimal' && <MinimalTemplate content={content} />}
+            {template === 'berlin' && <BerlinTemplate content={content} />}
+            {template === 'tokyo' && <TokyoTemplate content={content} />}
+            {template === 'stockholm' && <StockholmTemplate content={content} />}
+            {template === 'amsterdam' && <AmsterdamTemplate content={content} />}
+            {template === 'dubai' && <DubaiTemplate content={content} />}
+            {template === 'milan' && <MilanTemplate content={content} />}
+            {template === 'vancouver' && <VancouverTemplate content={content} />}
+            {template === 'seoul' && <SeoulTemplate content={content} />}
           </div>
         </TabsContent>
       </Tabs>
@@ -1134,6 +1150,171 @@ function BoldTemplate({ content }: { content: ResumeContent }) {
             )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Berlin — Clean split layout, teal accent, skill dots
+function BerlinTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black grid grid-cols-[240px_1fr]">
+      <div className="bg-[#0d9488] text-white p-6 rounded-l-lg">
+        <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-bold mx-auto mb-4">{(content.name || 'N')[0]}</div>
+        <div className="text-center mb-6">
+          <h1 className="text-lg font-bold">{content.name || 'Your Name'}</h1>
+          <p className="text-teal-100 text-xs mt-1">{content.role || 'Your Role'}</p>
+        </div>
+        <div className="space-y-1 text-xs text-teal-100 mb-6">{content.email && <p>{content.email}</p>}{content.phone && <p>{content.phone}</p>}{content.location && <p>{content.location}</p>}</div>
+        {content.skills.length > 0 && (<div className="mb-6"><h2 className="text-[10px] uppercase tracking-widest text-teal-200 mb-2">Skills</h2>{content.skills.map((s, i) => (<div key={i} className="flex items-center justify-between mb-1.5"><span className="text-xs">{s}</span><div className="flex gap-0.5">{[1,2,3,4,5].map(d => <div key={d} className={`h-1.5 w-1.5 rounded-full ${d <= 3 + (i % 3) ? 'bg-white' : 'bg-white/30'}`} />)}</div></div>))}</div>)}
+        {content.languages.length > 0 && (<div><h2 className="text-[10px] uppercase tracking-widest text-teal-200 mb-2">Languages</h2>{content.languages.map((l, i) => <p key={i} className="text-xs mb-1">{l}</p>)}</div>)}
+      </div>
+      <div className="p-6">
+        {content.summary && (<div className="mb-5"><h2 className="text-xs font-bold uppercase tracking-widest text-[#0d9488] mb-2">Profile</h2><p className="text-xs text-slate-600 leading-relaxed">{content.summary}</p></div>)}
+        {content.experience.length > 0 && (<div className="mb-5"><h2 className="text-xs font-bold uppercase tracking-widest text-[#0d9488] mb-3">Experience</h2>{content.experience.map((exp, i) => (<div key={i} className="mb-4"><div className="flex justify-between"><h3 className="text-sm font-semibold">{exp.title}</h3><span className="text-[10px] text-slate-400">{exp.startDate} – {exp.endDate}</span></div><p className="text-xs text-[#0d9488]">{exp.company}</p><p className="text-xs text-slate-500 mt-1">{exp.description}</p></div>))}</div>)}
+        {content.education.length > 0 && (<div><h2 className="text-xs font-bold uppercase tracking-widest text-[#0d9488] mb-3">Education</h2>{content.education.map((edu, i) => (<div key={i} className="mb-2"><p className="text-sm font-medium">{edu.degree}</p><p className="text-xs text-slate-500">{edu.institution} — {edu.year}</p></div>))}</div>)}
+      </div>
+    </div>
+  );
+}
+
+// Tokyo — Minimalist Japanese-inspired, red accent line, lots of whitespace
+function TokyoTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black p-10">
+      <div className="flex items-end justify-between mb-8 pb-4 border-b-2 border-[#dc2626]">
+        <div><h1 className="text-3xl font-light tracking-wide">{content.name || 'Your Name'}</h1><p className="text-[#dc2626] text-sm mt-1">{content.role || 'Your Role'}</p></div>
+        <div className="text-right text-xs text-slate-400">{content.email && <p>{content.email}</p>}{content.phone && <p>{content.phone}</p>}{content.location && <p>{content.location}</p>}</div>
+      </div>
+      {content.summary && <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-2xl">{content.summary}</p>}
+      {content.experience.length > 0 && (<div className="mb-8">{content.experience.map((exp, i) => (<div key={i} className="flex gap-6 mb-5"><div className="w-28 shrink-0 text-right"><p className="text-[10px] text-slate-400">{exp.startDate}</p><p className="text-[10px] text-slate-400">{exp.endDate}</p></div><div className="border-l-2 border-[#dc2626] pl-4"><h3 className="text-sm font-medium">{exp.title}</h3><p className="text-xs text-[#dc2626]">{exp.company}</p><p className="text-xs text-slate-500 mt-1">{exp.description}</p></div></div>))}</div>)}
+      <div className="grid grid-cols-3 gap-6">
+        {content.education.length > 0 && (<div>{content.education.map((edu, i) => (<div key={i} className="mb-2"><p className="text-xs font-medium">{edu.degree}</p><p className="text-[10px] text-slate-400">{edu.institution}, {edu.year}</p></div>))}</div>)}
+        {content.skills.length > 0 && (<div><div className="flex flex-wrap gap-1">{content.skills.map((s, i) => <span key={i} className="text-[10px] border border-[#dc2626] text-[#dc2626] px-2 py-0.5 rounded">{s}</span>)}</div></div>)}
+        {content.languages.length > 0 && (<div><p className="text-xs text-slate-500">{content.languages.join(' · ')}</p></div>)}
+      </div>
+    </div>
+  );
+}
+
+// Stockholm — Light blue sidebar, modern Scandinavian clean design
+function StockholmTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black grid grid-cols-[1fr_220px]">
+      <div className="p-8">
+        <h1 className="text-2xl font-bold text-slate-800 mb-1">{content.name || 'Your Name'}</h1>
+        <p className="text-sm text-[#2563eb] mb-4">{content.role || 'Your Role'}</p>
+        {content.summary && <p className="text-xs text-slate-500 leading-relaxed mb-6 border-l-2 border-[#2563eb] pl-3">{content.summary}</p>}
+        {content.experience.length > 0 && (<div className="mb-6"><h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Work Experience</h2>{content.experience.map((exp, i) => (<div key={i} className="mb-4"><h3 className="text-sm font-semibold">{exp.title} <span className="font-normal text-[#2563eb]">@ {exp.company}</span></h3><p className="text-[10px] text-slate-400 mb-1">{exp.startDate} – {exp.endDate}</p><p className="text-xs text-slate-500">{exp.description}</p></div>))}</div>)}
+        {content.education.length > 0 && (<div><h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Education</h2>{content.education.map((edu, i) => (<div key={i} className="mb-2"><p className="text-sm font-medium">{edu.degree}</p><p className="text-xs text-slate-400">{edu.institution} · {edu.year}</p></div>))}</div>)}
+      </div>
+      <div className="bg-[#eff6ff] p-6 rounded-r-lg">
+        <div className="space-y-1 text-xs text-slate-500 mb-6">{content.email && <p className="break-all">{content.email}</p>}{content.phone && <p>{content.phone}</p>}{content.location && <p>{content.location}</p>}</div>
+        {content.skills.length > 0 && (<div className="mb-6"><h2 className="text-[10px] font-bold uppercase tracking-widest text-[#2563eb] mb-2">Skills</h2>{content.skills.map((s, i) => (<div key={i} className="mb-2"><p className="text-xs mb-0.5">{s}</p><div className="h-1 bg-blue-200 rounded-full"><div className="h-1 bg-[#2563eb] rounded-full" style={{width: `${60 + (i * 7) % 40}%`}} /></div></div>))}</div>)}
+        {content.languages.length > 0 && (<div><h2 className="text-[10px] font-bold uppercase tracking-widest text-[#2563eb] mb-2">Languages</h2>{content.languages.map((l, i) => <p key={i} className="text-xs mb-1">{l}</p>)}</div>)}
+      </div>
+    </div>
+  );
+}
+
+// Amsterdam — Orange accent, horizontal sections, timeline dots
+function AmsterdamTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black p-8">
+      <div className="bg-gradient-to-r from-[#ea580c] to-[#f97316] text-white p-6 rounded-xl mb-6 -mx-2">
+        <h1 className="text-2xl font-bold">{content.name || 'Your Name'}</h1>
+        <p className="text-orange-100">{content.role || 'Your Role'}</p>
+        <div className="flex gap-4 mt-2 text-xs text-orange-100">{content.email && <span>{content.email}</span>}{content.phone && <span>{content.phone}</span>}{content.location && <span>{content.location}</span>}</div>
+      </div>
+      {content.summary && <p className="text-sm text-slate-600 leading-relaxed mb-6">{content.summary}</p>}
+      {content.experience.length > 0 && (<div className="mb-6"><h2 className="text-sm font-bold text-[#ea580c] mb-3 uppercase tracking-wider">Experience</h2>{content.experience.map((exp, i) => (<div key={i} className="flex gap-3 mb-4"><div className="flex flex-col items-center"><div className="h-3 w-3 rounded-full bg-[#ea580c] border-2 border-white shadow" />{i < content.experience.length - 1 && <div className="w-px flex-1 bg-orange-200" />}</div><div className="flex-1 pb-2"><div className="flex justify-between"><h3 className="text-sm font-semibold">{exp.title}</h3><span className="text-[10px] bg-orange-50 text-[#ea580c] px-2 py-0.5 rounded-full">{exp.startDate} – {exp.endDate}</span></div><p className="text-xs text-[#ea580c]">{exp.company}</p><p className="text-xs text-slate-500 mt-1">{exp.description}</p></div></div>))}</div>)}
+      <div className="grid grid-cols-3 gap-4 pt-4 border-t">
+        {content.education.length > 0 && (<div><h2 className="text-[10px] font-bold text-[#ea580c] uppercase tracking-wider mb-2">Education</h2>{content.education.map((edu, i) => (<div key={i} className="mb-1.5"><p className="text-xs font-medium">{edu.degree}</p><p className="text-[10px] text-slate-400">{edu.institution}, {edu.year}</p></div>))}</div>)}
+        {content.skills.length > 0 && (<div><h2 className="text-[10px] font-bold text-[#ea580c] uppercase tracking-wider mb-2">Skills</h2><div className="flex flex-wrap gap-1">{content.skills.map((s, i) => <span key={i} className="text-[10px] bg-orange-50 text-[#ea580c] px-2 py-0.5 rounded">{s}</span>)}</div></div>)}
+        {content.languages.length > 0 && (<div><h2 className="text-[10px] font-bold text-[#ea580c] uppercase tracking-wider mb-2">Languages</h2>{content.languages.map((l, i) => <p key={i} className="text-xs">{l}</p>)}</div>)}
+      </div>
+    </div>
+  );
+}
+
+// Dubai — Luxury gold/black, centered header, refined serif feel
+function DubaiTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black" style={{fontFamily:'Georgia,serif'}}>
+      <div className="bg-[#18181b] text-white p-8 text-center">
+        <h1 className="text-3xl tracking-[0.15em] font-normal">{(content.name || 'YOUR NAME').toUpperCase()}</h1>
+        <div className="h-px w-16 bg-[#d4a853] mx-auto my-3" />
+        <p className="text-[#d4a853] tracking-widest text-sm">{(content.role || 'YOUR ROLE').toUpperCase()}</p>
+        <div className="flex justify-center gap-6 mt-3 text-xs text-zinc-400">{content.email && <span>{content.email}</span>}{content.phone && <span>{content.phone}</span>}{content.location && <span>{content.location}</span>}</div>
+      </div>
+      <div className="p-8">
+        {content.summary && (<div className="text-center max-w-lg mx-auto mb-8"><p className="text-sm text-slate-500 italic leading-relaxed">{content.summary}</p></div>)}
+        {content.experience.length > 0 && (<div className="mb-8"><h2 className="text-center text-xs tracking-[0.3em] text-[#d4a853] mb-4 uppercase">Experience</h2>{content.experience.map((exp, i) => (<div key={i} className="mb-5 text-center"><h3 className="text-sm font-semibold" style={{fontFamily:'Georgia,serif'}}>{exp.title}</h3><p className="text-xs text-[#d4a853]">{exp.company} · {exp.startDate} – {exp.endDate}</p><p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">{exp.description}</p></div>))}</div>)}
+        <div className="grid grid-cols-3 gap-6 border-t border-[#d4a853]/30 pt-6">
+          {content.education.length > 0 && (<div className="text-center"><h2 className="text-[10px] tracking-[0.3em] text-[#d4a853] mb-2 uppercase">Education</h2>{content.education.map((edu, i) => (<div key={i} className="mb-1"><p className="text-xs font-medium">{edu.degree}</p><p className="text-[10px] text-slate-400">{edu.institution}</p></div>))}</div>)}
+          {content.skills.length > 0 && (<div className="text-center"><h2 className="text-[10px] tracking-[0.3em] text-[#d4a853] mb-2 uppercase">Expertise</h2><p className="text-xs text-slate-500">{content.skills.join(' · ')}</p></div>)}
+          {content.languages.length > 0 && (<div className="text-center"><h2 className="text-[10px] tracking-[0.3em] text-[#d4a853] mb-2 uppercase">Languages</h2><p className="text-xs text-slate-500">{content.languages.join(' · ')}</p></div>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Milan — Fashion/design-inspired, thin fonts, asymmetric layout
+function MilanTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black p-8">
+      <div className="mb-8"><h1 className="text-4xl font-extralight tracking-tight text-slate-800">{content.name || 'Your Name'}</h1><p className="text-sm font-light text-rose-500 tracking-wider mt-1">{content.role || 'Your Role'}</p><div className="flex gap-4 mt-2 text-[10px] text-slate-400">{content.email && <span>{content.email}</span>}{content.phone && <span>{content.phone}</span>}{content.location && <span>{content.location}</span>}</div></div>
+      {content.summary && <p className="text-xs font-light text-slate-500 leading-relaxed mb-8 max-w-xl border-l border-rose-300 pl-4">{content.summary}</p>}
+      <div className="grid grid-cols-[1fr_180px] gap-8">
+        <div>
+          {content.experience.length > 0 && (<div className="mb-6">{content.experience.map((exp, i) => (<div key={i} className="mb-5 group"><div className="flex items-baseline gap-2"><h3 className="text-sm font-medium">{exp.title}</h3><span className="text-[10px] text-rose-400">{exp.company}</span></div><p className="text-[10px] text-slate-400 mb-1">{exp.startDate} — {exp.endDate}</p><p className="text-xs font-light text-slate-500">{exp.description}</p><div className="h-px bg-slate-100 mt-4" /></div>))}</div>)}
+          {content.education.length > 0 && (<div>{content.education.map((edu, i) => (<div key={i} className="mb-2"><p className="text-xs font-medium">{edu.degree} <span className="font-light text-slate-400">— {edu.institution}, {edu.year}</span></p></div>))}</div>)}
+        </div>
+        <div>
+          {content.skills.length > 0 && (<div className="mb-6"><h2 className="text-[10px] text-rose-400 uppercase tracking-widest mb-2">Skills</h2>{content.skills.map((s, i) => <p key={i} className="text-xs font-light mb-1">{s}</p>)}</div>)}
+          {content.languages.length > 0 && (<div><h2 className="text-[10px] text-rose-400 uppercase tracking-widest mb-2">Languages</h2>{content.languages.map((l, i) => <p key={i} className="text-xs font-light mb-1">{l}</p>)}</div>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Vancouver — Nature-inspired green, card-based sections, rounded elements
+function VancouverTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-[#f0fdf4] shadow-lg rounded-2xl max-w-[800px] mx-auto text-black p-8">
+      <div className="bg-white rounded-xl p-6 mb-4 flex items-center gap-6">
+        <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold shrink-0">{(content.name || 'N')[0]}</div>
+        <div><h1 className="text-2xl font-bold text-slate-800">{content.name || 'Your Name'}</h1><p className="text-emerald-600 text-sm">{content.role || 'Your Role'}</p><div className="flex gap-3 mt-1 text-xs text-slate-400">{content.email && <span>{content.email}</span>}{content.phone && <span>{content.phone}</span>}{content.location && <span>{content.location}</span>}</div></div>
+      </div>
+      {content.summary && <div className="bg-white rounded-xl p-5 mb-4"><p className="text-sm text-slate-600 leading-relaxed">{content.summary}</p></div>}
+      {content.experience.length > 0 && (<div className="bg-white rounded-xl p-5 mb-4"><h2 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-3">Experience</h2>{content.experience.map((exp, i) => (<div key={i} className="mb-3 last:mb-0"><div className="flex justify-between"><h3 className="text-sm font-semibold">{exp.title}</h3><span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full">{exp.startDate} – {exp.endDate}</span></div><p className="text-xs text-emerald-600">{exp.company}</p><p className="text-xs text-slate-500 mt-1">{exp.description}</p></div>))}</div>)}
+      <div className="grid grid-cols-3 gap-4">
+        {content.education.length > 0 && (<div className="bg-white rounded-xl p-4"><h2 className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-2">Education</h2>{content.education.map((edu, i) => (<div key={i} className="mb-1"><p className="text-xs font-medium">{edu.degree}</p><p className="text-[10px] text-slate-400">{edu.institution}</p></div>))}</div>)}
+        {content.skills.length > 0 && (<div className="bg-white rounded-xl p-4"><h2 className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-2">Skills</h2><div className="flex flex-wrap gap-1">{content.skills.map((s, i) => <span key={i} className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">{s}</span>)}</div></div>)}
+        {content.languages.length > 0 && (<div className="bg-white rounded-xl p-4"><h2 className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-2">Languages</h2>{content.languages.map((l, i) => <p key={i} className="text-xs">{l}</p>)}</div>)}
+      </div>
+    </div>
+  );
+}
+
+// Seoul — K-style, pastel purple, modern grid, soft shadows
+function SeoulTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-[#faf5ff] shadow-lg rounded-2xl max-w-[800px] mx-auto text-black p-8">
+      <div className="text-center mb-6">
+        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 mx-auto mb-3 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-purple-200">{(content.name || 'N')[0]}</div>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{content.name || 'Your Name'}</h1>
+        <p className="text-sm text-purple-400 mt-1">{content.role || 'Your Role'}</p>
+        <div className="flex justify-center gap-4 mt-2 text-xs text-slate-400">{content.email && <span>{content.email}</span>}{content.phone && <span>{content.phone}</span>}{content.location && <span>{content.location}</span>}</div>
+      </div>
+      {content.summary && <div className="bg-white rounded-xl p-4 mb-4 shadow-sm"><p className="text-sm text-slate-600 text-center leading-relaxed">{content.summary}</p></div>}
+      {content.experience.length > 0 && (<div className="mb-4"><h2 className="text-xs font-bold text-purple-500 uppercase tracking-wider mb-3 text-center">Experience</h2><div className="grid grid-cols-1 gap-3">{content.experience.map((exp, i) => (<div key={i} className="bg-white rounded-xl p-4 shadow-sm"><div className="flex justify-between items-start"><div><h3 className="text-sm font-semibold">{exp.title}</h3><p className="text-xs text-purple-500">{exp.company}</p></div><span className="text-[10px] bg-purple-50 text-purple-500 px-2 py-0.5 rounded-full shrink-0">{exp.startDate} – {exp.endDate}</span></div><p className="text-xs text-slate-500 mt-2">{exp.description}</p></div>))}</div></div>)}
+      <div className="grid grid-cols-3 gap-3">
+        {content.education.length > 0 && (<div className="bg-white rounded-xl p-4 shadow-sm"><h2 className="text-[10px] font-bold text-purple-500 uppercase tracking-wider mb-2">Education</h2>{content.education.map((edu, i) => (<div key={i} className="mb-1"><p className="text-xs font-medium">{edu.degree}</p><p className="text-[10px] text-slate-400">{edu.institution}</p></div>))}</div>)}
+        {content.skills.length > 0 && (<div className="bg-white rounded-xl p-4 shadow-sm"><h2 className="text-[10px] font-bold text-purple-500 uppercase tracking-wider mb-2">Skills</h2><div className="flex flex-wrap gap-1">{content.skills.map((s, i) => <span key={i} className="text-[10px] bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 px-2 py-0.5 rounded-full">{s}</span>)}</div></div>)}
+        {content.languages.length > 0 && (<div className="bg-white rounded-xl p-4 shadow-sm"><h2 className="text-[10px] font-bold text-purple-500 uppercase tracking-wider mb-2">Languages</h2>{content.languages.map((l, i) => <p key={i} className="text-xs">{l}</p>)}</div>)}
       </div>
     </div>
   );
