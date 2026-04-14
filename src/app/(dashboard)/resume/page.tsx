@@ -41,15 +41,28 @@ export default function ResumePage() {
   const fetchResumes = async () => {
     try {
       const res = await fetch('/api/resumes');
+      if (!res.ok) return;
       const data = await res.json();
-      if (Array.isArray(data)) {
+      if (Array.isArray(data) && data.length > 0) {
         setResumes(data);
-        if (data.length > 0) {
-          setActiveResume(data[0]);
-          setContent(data[0].content || emptyContent);
-          setLanguage(data[0].language || 'en');
-          setTemplate(data[0].template || 'modern');
-        }
+        const first = data[0];
+        setActiveResume(first);
+        // Safely merge DB content with defaults
+        const dbContent = first.content || {};
+        setContent({
+          name: dbContent.name || '',
+          role: dbContent.role || '',
+          email: dbContent.email || '',
+          phone: dbContent.phone || '',
+          location: dbContent.location || '',
+          summary: dbContent.summary || '',
+          experience: Array.isArray(dbContent.experience) ? dbContent.experience : [],
+          education: Array.isArray(dbContent.education) ? dbContent.education : [],
+          skills: Array.isArray(dbContent.skills) ? dbContent.skills : [],
+          languages: Array.isArray(dbContent.languages) ? dbContent.languages : [],
+        });
+        setLanguage(first.language || 'en');
+        setTemplate(first.template || 'modern');
       }
     } catch {
       // Silent fail — page still works for creating new resumes
@@ -71,7 +84,15 @@ export default function ResumePage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setActiveResume(data);
-      setContent(data.content || emptyContent);
+      const c = data.content || {};
+      setContent({
+        name: c.name || '', role: c.role || '', email: c.email || '', phone: c.phone || '',
+        location: c.location || '', summary: c.summary || '',
+        experience: Array.isArray(c.experience) ? c.experience : [],
+        education: Array.isArray(c.education) ? c.education : [],
+        skills: Array.isArray(c.skills) ? c.skills : [],
+        languages: Array.isArray(c.languages) ? c.languages : [],
+      });
       setResumes((prev) => [data, ...prev]);
       setShowJobInput(false);
       toast.success(fromJob ? 'Resume tailored for the job!' : 'Resume generated!');
@@ -242,9 +263,17 @@ export default function ResumePage() {
               className="cursor-pointer whitespace-nowrap"
               onClick={() => {
                 setActiveResume(r);
-                setContent(r.content);
-                setLanguage(r.language);
-                setTemplate(r.template);
+                const c = r.content || {} as any;
+                setContent({
+                  name: c.name || '', role: c.role || '', email: c.email || '', phone: c.phone || '',
+                  location: c.location || '', summary: c.summary || '',
+                  experience: Array.isArray(c.experience) ? c.experience : [],
+                  education: Array.isArray(c.education) ? c.education : [],
+                  skills: Array.isArray(c.skills) ? c.skills : [],
+                  languages: Array.isArray(c.languages) ? c.languages : [],
+                });
+                setLanguage(r.language || 'en');
+                setTemplate(r.template || 'modern');
               }}
             >
               <FileText className="h-3 w-3 mr-1" />
