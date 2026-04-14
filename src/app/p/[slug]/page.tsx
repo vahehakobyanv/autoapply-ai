@@ -157,8 +157,14 @@ export default async function PortfolioPublicPage({ params }: Props) {
         return null;
       })}
 
-      <footer className="py-8 text-center text-sm text-muted-foreground border-t">
-        Built with <a href="https://autoapply-ai-vert.vercel.app" className="text-blue-500 hover:underline">AutoApply AI</a>
+      <footer className="py-8 border-t">
+        <div className="text-center">
+          <a href="https://autoapply-ai-vert.vercel.app?ref=portfolio" className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm rounded-full hover:shadow-lg transition-shadow font-medium">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+            Build your portfolio with AutoApply AI — Free
+          </a>
+          <p className="text-xs text-muted-foreground mt-2">AI-powered job applications, resumes, and career tools</p>
+        </div>
       </footer>
     </div>
   );

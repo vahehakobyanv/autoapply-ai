@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ExitIntent } from '@/components/layout/exit-intent';
 import {
   Zap,
   FileText,
@@ -374,6 +375,7 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+      <ExitIntent />
     </div>
   );
 }

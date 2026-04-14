@@ -7,6 +7,7 @@ import { AIChatbot } from '@/components/layout/ai-chatbot';
 import { KeyboardShortcuts } from '@/components/layout/keyboard-shortcuts';
 import { WhatsNew } from '@/components/layout/whats-new';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { ReferralPopup } from '@/components/layout/referral-popup';
 import { Toaster } from '@/components/ui/sonner';
 
 export const dynamic = 'force-dynamic';
@@ -28,6 +29,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <AIChatbot />
       <FAB />
       <MobileNav />
+      <ReferralPopup />
       <Toaster />
     </div>
   );

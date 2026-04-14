@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /settings
+Disallow: /onboarding
+Disallow: /tracker
+Disallow: /resume
+Disallow: /jobs
+Disallow: /payments
+
+Sitemap: https://autoapply-ai-vert.vercel.app/sitemap.xml

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Zap, ArrowLeft } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { EmailCapture } from '@/components/layout/email-capture';
 import type { Metadata } from 'next';
 
 const POSTS: Record<string, { title: string; category: string; date: string; readTime: string; content: string[] }> = {
@@ -109,7 +110,10 @@ export default async function BlogPostPage({ params }: Props) {
             return <p key={i} className="text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">{block}</p>;
           })}
         </div>
-        <div className="mt-16 p-8 bg-blue-50 dark:bg-blue-950/30 rounded-2xl text-center">
+        <div className="mt-12">
+          <EmailCapture />
+        </div>
+        <div className="mt-8 p-8 bg-blue-50 dark:bg-blue-950/30 rounded-2xl text-center">
           <h2 className="text-xl font-bold mb-2">Ready to automate your job search?</h2>
           <p className="text-muted-foreground mb-4">Join thousands using AI to land their dream job.</p>
           <Link href="/register" className="inline-block bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 font-medium">Start Free</Link>

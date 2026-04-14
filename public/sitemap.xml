@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://autoapply-ai-vert.vercel.app</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/pricing</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/success-stories</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/resources</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog/how-to-write-perfect-resume-2024</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog/top-10-hh-ru-tips</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog/ai-cover-letter-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog/staff-am-guide-armenia</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog/interview-preparation-checklist</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/blog/salary-negotiation-cis</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/vs/teal</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/vs/huntr</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/vs/lazyapply</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/vs/jobscan</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/changelog</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/register</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://autoapply-ai-vert.vercel.app/login</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>
