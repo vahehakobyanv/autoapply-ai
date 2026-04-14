@@ -57,12 +57,17 @@ const navSections = [
       { href: '/reference-letter', label: 'Reference Letter', icon: FileText },
       { href: '/skill-quiz', label: 'Skill Quiz', icon: Bot },
       { href: '/relocation', label: 'Relocation Calc', icon: MapPin },
+      { href: '/video-resume', label: 'Video Resume', icon: Mic },
+      { href: '/email-templates', label: 'Email Templates', icon: Mail },
+      { href: '/events', label: 'Events & Meetups', icon: Users },
     ],
   },
   {
     label: 'More',
     items: [
       { href: '/interview-notes', label: 'Interview Log', icon: Mic },
+      { href: '/salary-history', label: 'Salary History', icon: DollarSign },
+      { href: '/work-portfolio', label: 'Work Portfolio', icon: FolderOpen },
       { href: '/offers', label: 'Compare Offers', icon: Scale },
       { href: '/contacts', label: 'Contacts CRM', icon: UserCircle },
       { href: '/documents', label: 'Documents', icon: FolderOpen },

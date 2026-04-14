@@ -411,6 +411,38 @@ CREATE TABLE IF NOT EXISTS interview_notes (
 ALTER TABLE interview_notes ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can CRUD own interview notes" ON interview_notes FOR ALL USING (auth.uid() = user_id);
 
+-- Salary History table
+CREATE TABLE IF NOT EXISTS salary_history (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  company TEXT NOT NULL DEFAULT '',
+  role TEXT NOT NULL DEFAULT '',
+  salary NUMERIC NOT NULL DEFAULT 0,
+  currency TEXT DEFAULT 'USD',
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  type TEXT DEFAULT 'salary',
+  notes TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE salary_history ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own salary history" ON salary_history FOR ALL USING (auth.uid() = user_id);
+
+-- Work Projects table
+CREATE TABLE IF NOT EXISTS work_projects (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  tech_stack TEXT[] DEFAULT '{}',
+  url TEXT NOT NULL DEFAULT '',
+  image_url TEXT NOT NULL DEFAULT '',
+  role_in_project TEXT NOT NULL DEFAULT '',
+  results TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE work_projects ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own projects" ON work_projects FOR ALL USING (auth.uid() = user_id);
+
 -- Add tags and deadline columns to applications
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS deadline DATE;
