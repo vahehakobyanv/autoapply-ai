@@ -139,6 +139,11 @@ export default function ResumePage() {
               <SelectItem value="executive">Executive</SelectItem>
               <SelectItem value="creative">Creative</SelectItem>
               <SelectItem value="minimal">Minimal</SelectItem>
+              <SelectItem value="professional">Professional</SelectItem>
+              <SelectItem value="tech">Tech</SelectItem>
+              <SelectItem value="elegant">Elegant</SelectItem>
+              <SelectItem value="compact">Compact</SelectItem>
+              <SelectItem value="bold">Bold</SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={generateResume} disabled={generating}>
@@ -400,6 +405,11 @@ export default function ResumePage() {
             {template === 'modern' && <ModernTemplate content={content} />}
             {template === 'simple' && <SimpleTemplate content={content} />}
             {template === 'executive' && <ExecutiveTemplate content={content} />}
+            {template === 'professional' && <ProfessionalTemplate content={content} />}
+            {template === 'tech' && <TechTemplate content={content} />}
+            {template === 'elegant' && <ElegantTemplate content={content} />}
+            {template === 'compact' && <CompactTemplate content={content} />}
+            {template === 'bold' && <BoldTemplate content={content} />}
             {template === 'creative' && <CreativeTemplate content={content} />}
             {template === 'minimal' && <MinimalTemplate content={content} />}
           </div>
@@ -761,6 +771,357 @@ function MinimalTemplate({ content }: { content: ResumeContent }) {
       {content.languages.length > 0 && (
         <p className="text-xs text-slate-400">{content.languages.join(' · ')}</p>
       )}
+    </div>
+  );
+}
+
+// Template 6: Professional — Navy blue header, two-column layout, clean sections
+function ProfessionalTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black">
+      <div className="bg-[#1e3a5f] text-white p-8 rounded-t-lg">
+        <h1 className="text-3xl font-bold tracking-wide">{content.name || 'Your Name'}</h1>
+        <p className="text-blue-200 text-lg mt-1">{content.role || 'Your Role'}</p>
+        <div className="flex gap-4 mt-3 text-xs text-blue-100">
+          {content.email && <span>{content.email}</span>}
+          {content.phone && <span>{content.phone}</span>}
+          {content.location && <span>{content.location}</span>}
+        </div>
+      </div>
+      <div className="p-8 grid grid-cols-[1fr_250px] gap-8">
+        <div>
+          {content.summary && (
+            <div className="mb-6">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1e3a5f] border-b-2 border-[#1e3a5f] pb-1 mb-3">Profile</h2>
+              <p className="text-sm text-slate-600 leading-relaxed">{content.summary}</p>
+            </div>
+          )}
+          {content.experience.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1e3a5f] border-b-2 border-[#1e3a5f] pb-1 mb-3">Experience</h2>
+              {content.experience.map((exp, i) => (
+                <div key={i} className="mb-4">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-semibold text-sm">{exp.title}</h3>
+                    <span className="text-xs text-slate-400">{exp.startDate} – {exp.endDate}</span>
+                  </div>
+                  <p className="text-xs text-[#1e3a5f] font-medium">{exp.company}</p>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {content.education.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1e3a5f] border-b-2 border-[#1e3a5f] pb-1 mb-3">Education</h2>
+              {content.education.map((edu, i) => (
+                <div key={i} className="mb-2">
+                  <p className="text-sm font-medium">{edu.degree}</p>
+                  <p className="text-xs text-slate-500">{edu.institution} — {edu.year}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="border-l pl-6">
+          {content.skills.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1e3a5f] border-b-2 border-[#1e3a5f] pb-1 mb-3">Skills</h2>
+              <div className="space-y-1.5">
+                {content.skills.map((s, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#1e3a5f]" />
+                    <span className="text-xs">{s}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {content.languages.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1e3a5f] border-b-2 border-[#1e3a5f] pb-1 mb-3">Languages</h2>
+              {content.languages.map((l, i) => <p key={i} className="text-xs mb-1">{l}</p>)}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Template 7: Tech — Dark sidebar, monospace accents, code-inspired
+function TechTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black grid grid-cols-[220px_1fr]">
+      <div className="bg-slate-900 text-white p-6 rounded-l-lg">
+        <div className="mb-6">
+          <h1 className="text-lg font-bold">{content.name || 'Your Name'}</h1>
+          <p className="text-emerald-400 text-xs font-mono mt-1">{content.role || 'role'}</p>
+        </div>
+        <div className="space-y-1 text-xs text-slate-300 mb-6">
+          {content.email && <p className="font-mono">{content.email}</p>}
+          {content.phone && <p className="font-mono">{content.phone}</p>}
+          {content.location && <p>{content.location}</p>}
+        </div>
+        {content.skills.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-emerald-400 text-[10px] font-mono uppercase tracking-wider mb-2">// skills</h2>
+            <div className="space-y-1">
+              {content.skills.map((s, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="text-emerald-400 font-mono text-xs">&#8250;</span>
+                  <span className="text-xs">{s}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {content.languages.length > 0 && (
+          <div>
+            <h2 className="text-emerald-400 text-[10px] font-mono uppercase tracking-wider mb-2">// languages</h2>
+            {content.languages.map((l, i) => <p key={i} className="text-xs mb-1">{l}</p>)}
+          </div>
+        )}
+      </div>
+      <div className="p-6">
+        {content.summary && (
+          <div className="mb-5 p-3 bg-slate-50 rounded border-l-2 border-emerald-500">
+            <p className="text-sm text-slate-600">{content.summary}</p>
+          </div>
+        )}
+        {content.experience.length > 0 && (
+          <div className="mb-5">
+            <h2 className="text-xs font-mono text-emerald-600 uppercase tracking-wider mb-3">experience</h2>
+            {content.experience.map((exp, i) => (
+              <div key={i} className="mb-4 pl-3 border-l-2 border-slate-200">
+                <div className="flex justify-between">
+                  <h3 className="text-sm font-semibold">{exp.title}</h3>
+                  <span className="text-[10px] font-mono text-slate-400">{exp.startDate}–{exp.endDate}</span>
+                </div>
+                <p className="text-xs text-emerald-600 font-medium">{exp.company}</p>
+                <p className="text-xs text-slate-500 mt-1">{exp.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        {content.education.length > 0 && (
+          <div>
+            <h2 className="text-xs font-mono text-emerald-600 uppercase tracking-wider mb-3">education</h2>
+            {content.education.map((edu, i) => (
+              <div key={i} className="mb-2 pl-3 border-l-2 border-slate-200">
+                <p className="text-sm font-medium">{edu.degree}</p>
+                <p className="text-xs text-slate-500">{edu.institution} · {edu.year}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Template 8: Elegant — Serif fonts, gold accents, refined spacing
+function ElegantTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black p-10" style={{ fontFamily: 'Georgia, serif' }}>
+      <div className="text-center mb-8 pb-6 border-b border-[#c9a96e]">
+        <h1 className="text-3xl font-normal tracking-wide text-slate-800">{content.name || 'Your Name'}</h1>
+        <p className="text-[#c9a96e] text-sm mt-2 tracking-widest uppercase">{content.role || 'Your Role'}</p>
+        <div className="flex justify-center gap-6 mt-3 text-xs text-slate-500">
+          {content.email && <span>{content.email}</span>}
+          {content.phone && <span>{content.phone}</span>}
+          {content.location && <span>{content.location}</span>}
+        </div>
+      </div>
+      {content.summary && (
+        <div className="mb-8 text-center max-w-lg mx-auto">
+          <p className="text-sm text-slate-600 leading-relaxed italic">{content.summary}</p>
+        </div>
+      )}
+      {content.experience.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-center text-xs uppercase tracking-[0.3em] text-[#c9a96e] mb-4">Professional Experience</h2>
+          {content.experience.map((exp, i) => (
+            <div key={i} className="mb-5">
+              <div className="flex justify-between items-baseline">
+                <h3 className="text-sm font-semibold" style={{ fontFamily: 'Georgia, serif' }}>{exp.title}</h3>
+                <span className="text-xs text-slate-400 italic">{exp.startDate} – {exp.endDate}</span>
+              </div>
+              <p className="text-xs text-[#c9a96e]">{exp.company}</p>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">{exp.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="grid grid-cols-2 gap-8">
+        {content.education.length > 0 && (
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.3em] text-[#c9a96e] mb-3">Education</h2>
+            {content.education.map((edu, i) => (
+              <div key={i} className="mb-2">
+                <p className="text-sm font-medium">{edu.degree}</p>
+                <p className="text-xs text-slate-500">{edu.institution}, {edu.year}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        <div>
+          {content.skills.length > 0 && (
+            <div className="mb-4">
+              <h2 className="text-xs uppercase tracking-[0.3em] text-[#c9a96e] mb-3">Expertise</h2>
+              <p className="text-xs text-slate-600 leading-relaxed">{content.skills.join(' · ')}</p>
+            </div>
+          )}
+          {content.languages.length > 0 && (
+            <div>
+              <h2 className="text-xs uppercase tracking-[0.3em] text-[#c9a96e] mb-3">Languages</h2>
+              <p className="text-xs text-slate-600">{content.languages.join(' · ')}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Template 9: Compact — Dense one-page layout, maximizes content in small space
+function CompactTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black p-6">
+      <div className="flex justify-between items-start mb-4 pb-3 border-b">
+        <div>
+          <h1 className="text-xl font-bold">{content.name || 'Your Name'}</h1>
+          <p className="text-sm text-blue-600">{content.role || 'Your Role'}</p>
+        </div>
+        <div className="text-right text-[11px] text-slate-500">
+          {content.email && <p>{content.email}</p>}
+          {content.phone && <p>{content.phone}</p>}
+          {content.location && <p>{content.location}</p>}
+        </div>
+      </div>
+      {content.summary && <p className="text-[11px] text-slate-600 mb-3 leading-relaxed">{content.summary}</p>}
+      <div className="grid grid-cols-[1fr_200px] gap-4">
+        <div>
+          {content.experience.length > 0 && (
+            <div className="mb-3">
+              <h2 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Experience</h2>
+              {content.experience.map((exp, i) => (
+                <div key={i} className="mb-2.5">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-xs font-semibold">{exp.title}</span>
+                    <span className="text-[10px] text-slate-400">{exp.startDate}–{exp.endDate}</span>
+                  </div>
+                  <p className="text-[10px] text-blue-600">{exp.company}</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {content.education.length > 0 && (
+            <div>
+              <h2 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Education</h2>
+              {content.education.map((edu, i) => (
+                <div key={i} className="flex justify-between items-baseline mb-1">
+                  <span className="text-xs font-medium">{edu.degree} <span className="text-slate-400 font-normal">— {edu.institution}</span></span>
+                  <span className="text-[10px] text-slate-400">{edu.year}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="border-l pl-4">
+          {content.skills.length > 0 && (
+            <div className="mb-3">
+              <h2 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Skills</h2>
+              <div className="flex flex-wrap gap-1">
+                {content.skills.map((s, i) => (
+                  <span key={i} className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded">{s}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          {content.languages.length > 0 && (
+            <div>
+              <h2 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Languages</h2>
+              {content.languages.map((l, i) => <p key={i} className="text-[10px] mb-0.5">{l}</p>)}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Template 10: Bold — Large typography, strong color blocks, high impact
+function BoldTemplate({ content }: { content: ResumeContent }) {
+  return (
+    <div className="bg-white shadow-lg rounded-lg max-w-[800px] mx-auto text-black">
+      <div className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white p-8 rounded-t-lg">
+        <h1 className="text-4xl font-black">{content.name || 'YOUR NAME'}</h1>
+        <p className="text-xl font-light mt-1 text-violet-100">{content.role || 'Your Role'}</p>
+        <div className="flex gap-4 mt-4 text-xs text-violet-200">
+          {content.email && <span>{content.email}</span>}
+          {content.phone && <span>{content.phone}</span>}
+          {content.location && <span>{content.location}</span>}
+        </div>
+      </div>
+      <div className="p-8">
+        {content.summary && (
+          <div className="mb-6 p-4 bg-violet-50 rounded-xl border-l-4 border-violet-600">
+            <p className="text-sm text-slate-700 leading-relaxed">{content.summary}</p>
+          </div>
+        )}
+        {content.experience.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-lg font-black text-violet-600 mb-4">EXPERIENCE</h2>
+            {content.experience.map((exp, i) => (
+              <div key={i} className="mb-4 pl-4 border-l-2 border-violet-200">
+                <h3 className="font-bold">{exp.title}</h3>
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-violet-600 font-semibold">{exp.company}</p>
+                  <span className="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full">{exp.startDate} – {exp.endDate}</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">{exp.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="grid grid-cols-2 gap-6">
+          {content.education.length > 0 && (
+            <div>
+              <h2 className="text-sm font-black text-violet-600 mb-3">EDUCATION</h2>
+              {content.education.map((edu, i) => (
+                <div key={i} className="mb-2">
+                  <p className="text-sm font-bold">{edu.degree}</p>
+                  <p className="text-xs text-slate-500">{edu.institution} · {edu.year}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          <div>
+            {content.skills.length > 0 && (
+              <div className="mb-4">
+                <h2 className="text-sm font-black text-violet-600 mb-3">SKILLS</h2>
+                <div className="flex flex-wrap gap-1.5">
+                  {content.skills.map((s, i) => (
+                    <span key={i} className="text-xs bg-gradient-to-r from-violet-100 to-fuchsia-100 text-violet-700 px-2.5 py-1 rounded-full font-medium">{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {content.languages.length > 0 && (
+              <div>
+                <h2 className="text-sm font-black text-violet-600 mb-3">LANGUAGES</h2>
+                <div className="flex flex-wrap gap-1.5">
+                  {content.languages.map((l, i) => (
+                    <span key={i} className="text-xs bg-violet-50 text-violet-600 px-2.5 py-1 rounded-full">{l}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
