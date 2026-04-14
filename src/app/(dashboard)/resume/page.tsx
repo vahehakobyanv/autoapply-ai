@@ -147,9 +147,9 @@ export default function ResumePage() {
               <SelectItem value="bold">Bold</SelectItem>
             </SelectContent>
           </Select>
-          {selectedResume && (
+          {activeResume && (
             <Button variant="outline" size="sm" onClick={() => {
-              const url = `${window.location.origin}/r/${selectedResume}`;
+              const url = `${window.location.origin}/r/${activeResume.id}`;
               navigator.clipboard.writeText(url);
               toast.success('Resume link copied!');
             }}>
