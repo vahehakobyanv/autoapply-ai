@@ -56,6 +56,46 @@ const POSTS = [
     date: 'Mar 25, 2026',
     readTime: '5 min',
   },
+  {
+    slug: 'ai-resume-builder-guide-2026',
+    title: 'AI Resume Builder: How to Create a Professional CV in 30 Seconds',
+    excerpt: 'Step-by-step guide to using AI to generate ATS-optimized resumes that actually get interviews.',
+    category: 'Resume',
+    date: 'Apr 14, 2026',
+    readTime: '6 min',
+  },
+  {
+    slug: 'hh-ru-auto-apply-guide',
+    title: 'How to Auto-Apply to 100+ Jobs on hh.ru (Without Getting Banned)',
+    excerpt: 'Use automation smartly on hh.ru — human-like delays, personalized cover letters, and tracking.',
+    category: 'Job Search',
+    date: 'Apr 14, 2026',
+    readTime: '7 min',
+  },
+  {
+    slug: 'remote-jobs-russia-armenia-2026',
+    title: 'Best Remote Job Opportunities in Russia and Armenia (2026)',
+    excerpt: 'Top companies hiring remotely, salary ranges, and how to land a remote position from the CIS.',
+    category: 'Job Search',
+    date: 'Apr 13, 2026',
+    readTime: '8 min',
+  },
+  {
+    slug: 'ats-resume-optimization',
+    title: 'ATS Resume Optimization: Beat the Bots and Get Seen by Recruiters',
+    excerpt: '98% of Fortune 500 use ATS. Learn exactly how to format and keyword-optimize your resume.',
+    category: 'Resume',
+    date: 'Apr 13, 2026',
+    readTime: '6 min',
+  },
+  {
+    slug: 'career-change-guide-2026',
+    title: 'How to Successfully Change Careers in 2026: A Complete Playbook',
+    excerpt: 'From identifying transferable skills to landing your first role in a new field — with AI tools.',
+    category: 'Career',
+    date: 'Apr 12, 2026',
+    readTime: '9 min',
+  },
 ];
 
 export default function BlogPage() {
