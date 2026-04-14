@@ -23,7 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Building2, ExternalLink, FileText, MessageSquare, Loader2, Sparkles } from 'lucide-react';
+import { Building2, ExternalLink, FileText, MessageSquare, Loader2, Sparkles, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Application, ApplicationStatus } from '@/types';
 
@@ -271,7 +271,7 @@ export default function TrackerPage() {
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <Button onClick={saveNotes}>Save Notes</Button>
                 <div className="flex gap-1">
                   {COLUMNS.map((col) => (
@@ -288,6 +288,24 @@ export default function TrackerPage() {
                     </Button>
                   ))}
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-auto text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={async () => {
+                    try {
+                      const res = await fetch(`/api/applications?id=${selectedApp.id}`, { method: 'DELETE' });
+                      const data = await res.json();
+                      if (data.error) throw new Error(data.error);
+                      setApplications((prev) => prev.filter((a) => a.id !== selectedApp.id));
+                      setSelectedApp(null);
+                      toast.success('Application removed');
+                    } catch { toast.error('Failed to delete'); }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
+                </Button>
               </div>
             </div>
           )}

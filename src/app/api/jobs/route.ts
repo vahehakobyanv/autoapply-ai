@@ -158,3 +158,31 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: 'Failed to search jobs' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  const supabase = await createServerSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID required' }, { status: 400 });
+  }
+
+  const { error } = await supabase
+    .from('jobs')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
+}

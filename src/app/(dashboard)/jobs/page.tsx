@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import {
   Link2, Search, Plus, Building2, MapPin, DollarSign, Loader2,
-  ExternalLink, Bookmark, Zap, CheckSquare, Square, X,
+  ExternalLink, Bookmark, Zap, CheckSquare, Square, X, Trash2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Job } from '@/types';
@@ -410,12 +410,30 @@ export default function JobsPage() {
                           {job.description && <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{job.description}</p>}
                         </div>
                       </div>
-                      <div className="flex gap-2 ml-4" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex gap-1 ml-4" onClick={(e) => e.stopPropagation()}>
                         {job.url && (
                           <a href={job.url} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="icon"><ExternalLink className="h-4 w-4" /></Button>
                           </a>
                         )}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                          onClick={async () => {
+                            try {
+                              const res = await fetch(`/api/jobs?id=${job.id}`, { method: 'DELETE' });
+                              const data = await res.json();
+                              if (data.error) throw new Error(data.error);
+                              setJobs((prev) => prev.filter((j) => j.id !== job.id));
+                              selectedJobs.delete(job.id);
+                              setSelectedJobs(new Set(selectedJobs));
+                              toast.success('Job removed');
+                            } catch { toast.error('Failed to delete'); }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
