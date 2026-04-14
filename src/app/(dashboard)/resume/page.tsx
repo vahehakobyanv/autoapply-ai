@@ -427,24 +427,41 @@ export default function ResumePage() {
             </Button>
           </div>
           <div ref={previewRef}>
-            {template === 'modern' && <ModernTemplate content={content} />}
-            {template === 'simple' && <SimpleTemplate content={content} />}
-            {template === 'executive' && <ExecutiveTemplate content={content} />}
-            {template === 'professional' && <ProfessionalTemplate content={content} />}
-            {template === 'tech' && <TechTemplate content={content} />}
-            {template === 'elegant' && <ElegantTemplate content={content} />}
-            {template === 'compact' && <CompactTemplate content={content} />}
-            {template === 'bold' && <BoldTemplate content={content} />}
-            {template === 'creative' && <CreativeTemplate content={content} />}
-            {template === 'minimal' && <MinimalTemplate content={content} />}
-            {template === 'berlin' && <BerlinTemplate content={content} />}
-            {template === 'tokyo' && <TokyoTemplate content={content} />}
-            {template === 'stockholm' && <StockholmTemplate content={content} />}
-            {template === 'amsterdam' && <AmsterdamTemplate content={content} />}
-            {template === 'dubai' && <DubaiTemplate content={content} />}
-            {template === 'milan' && <MilanTemplate content={content} />}
-            {template === 'vancouver' && <VancouverTemplate content={content} />}
-            {template === 'seoul' && <SeoulTemplate content={content} />}
+            {(() => {
+              // Normalize content to prevent null/undefined crashes in templates
+              const safe: ResumeContent = {
+                name: content?.name || '',
+                role: content?.role || '',
+                email: content?.email || '',
+                phone: content?.phone || '',
+                location: content?.location || '',
+                summary: content?.summary || '',
+                experience: Array.isArray(content?.experience) ? content.experience : [],
+                education: Array.isArray(content?.education) ? content.education : [],
+                skills: Array.isArray(content?.skills) ? content.skills : [],
+                languages: Array.isArray(content?.languages) ? content.languages : [],
+              };
+              return <>
+            {template === 'modern' && <ModernTemplate content={safe} />}
+            {template === 'simple' && <SimpleTemplate content={safe} />}
+            {template === 'executive' && <ExecutiveTemplate content={safe} />}
+            {template === 'professional' && <ProfessionalTemplate content={safe} />}
+            {template === 'tech' && <TechTemplate content={safe} />}
+            {template === 'elegant' && <ElegantTemplate content={safe} />}
+            {template === 'compact' && <CompactTemplate content={safe} />}
+            {template === 'bold' && <BoldTemplate content={safe} />}
+            {template === 'creative' && <CreativeTemplate content={safe} />}
+            {template === 'minimal' && <MinimalTemplate content={safe} />}
+            {template === 'berlin' && <BerlinTemplate content={safe} />}
+            {template === 'tokyo' && <TokyoTemplate content={safe} />}
+            {template === 'stockholm' && <StockholmTemplate content={safe} />}
+            {template === 'amsterdam' && <AmsterdamTemplate content={safe} />}
+            {template === 'dubai' && <DubaiTemplate content={safe} />}
+            {template === 'milan' && <MilanTemplate content={safe} />}
+            {template === 'vancouver' && <VancouverTemplate content={safe} />}
+            {template === 'seoul' && <SeoulTemplate content={safe} />}
+              </>;
+            })()}
           </div>
         </TabsContent>
       </Tabs>
