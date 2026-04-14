@@ -481,46 +481,39 @@ export default function ResumePage() {
             </Button>
           </div>
           <div ref={previewRef}>
-            {(() => {
-              // Normalize content to prevent null/undefined crashes in templates
-              const safe: ResumeContent = {
-                name: content?.name || '',
-                role: content?.role || '',
-                email: content?.email || '',
-                phone: content?.phone || '',
-                location: content?.location || '',
-                summary: content?.summary || '',
-                experience: Array.isArray(content?.experience) ? content.experience : [],
-                education: Array.isArray(content?.education) ? content.education : [],
-                skills: Array.isArray(content?.skills) ? content.skills : [],
-                languages: Array.isArray(content?.languages) ? content.languages : [],
-              };
-              return <>
-            {template === 'modern' && <ModernTemplate content={safe} />}
-            {template === 'simple' && <SimpleTemplate content={safe} />}
-            {template === 'executive' && <ExecutiveTemplate content={safe} />}
-            {template === 'professional' && <ProfessionalTemplate content={safe} />}
-            {template === 'tech' && <TechTemplate content={safe} />}
-            {template === 'elegant' && <ElegantTemplate content={safe} />}
-            {template === 'compact' && <CompactTemplate content={safe} />}
-            {template === 'bold' && <BoldTemplate content={safe} />}
-            {template === 'creative' && <CreativeTemplate content={safe} />}
-            {template === 'minimal' && <MinimalTemplate content={safe} />}
-            {template === 'berlin' && <BerlinTemplate content={safe} />}
-            {template === 'tokyo' && <TokyoTemplate content={safe} />}
-            {template === 'stockholm' && <StockholmTemplate content={safe} />}
-            {template === 'amsterdam' && <AmsterdamTemplate content={safe} />}
-            {template === 'dubai' && <DubaiTemplate content={safe} />}
-            {template === 'milan' && <MilanTemplate content={safe} />}
-            {template === 'vancouver' && <VancouverTemplate content={safe} />}
-            {template === 'seoul' && <SeoulTemplate content={safe} />}
-              </>;
-            })()}
+            <TemplateRenderer template={template} content={content} />
           </div>
         </TabsContent>
       </Tabs>
     </div>
   );
+}
+
+function TemplateRenderer({ template, content }: { template: string; content: ResumeContent }) {
+  const safe: ResumeContent = {
+    name: content?.name || '',
+    role: content?.role || '',
+    email: content?.email || '',
+    phone: content?.phone || '',
+    location: content?.location || '',
+    summary: content?.summary || '',
+    experience: Array.isArray(content?.experience) ? content.experience : [],
+    education: Array.isArray(content?.education) ? content.education : [],
+    skills: Array.isArray(content?.skills) ? content.skills : [],
+    languages: Array.isArray(content?.languages) ? content.languages : [],
+  };
+
+  const templates: Record<string, React.ComponentType<{ content: ResumeContent }>> = {
+    modern: ModernTemplate, simple: SimpleTemplate, executive: ExecutiveTemplate,
+    creative: CreativeTemplate, minimal: MinimalTemplate, professional: ProfessionalTemplate,
+    tech: TechTemplate, elegant: ElegantTemplate, compact: CompactTemplate, bold: BoldTemplate,
+    berlin: BerlinTemplate, tokyo: TokyoTemplate, stockholm: StockholmTemplate,
+    amsterdam: AmsterdamTemplate, dubai: DubaiTemplate, milan: MilanTemplate,
+    vancouver: VancouverTemplate, seoul: SeoulTemplate,
+  };
+
+  const Component = templates[template] || ModernTemplate;
+  return <Component content={safe} />;
 }
 
 function ModernTemplate({ content }: { content: ResumeContent }) {
