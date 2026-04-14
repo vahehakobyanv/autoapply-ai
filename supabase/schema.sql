@@ -390,6 +390,27 @@ CREATE TABLE IF NOT EXISTS calendar_events (
 ALTER TABLE calendar_events ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can CRUD own events" ON calendar_events FOR ALL USING (auth.uid() = user_id);
 
+-- Interview Notes table
+CREATE TABLE IF NOT EXISTS interview_notes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  application_id UUID REFERENCES applications(id) ON DELETE SET NULL,
+  company TEXT NOT NULL DEFAULT '',
+  role TEXT NOT NULL DEFAULT '',
+  interview_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  interview_type TEXT NOT NULL DEFAULT 'video' CHECK (interview_type IN ('phone', 'video', 'onsite', 'technical', 'behavioral', 'panel')),
+  interviewer_name TEXT NOT NULL DEFAULT '',
+  questions_asked TEXT[] DEFAULT '{}',
+  my_answers TEXT NOT NULL DEFAULT '',
+  overall_feeling TEXT NOT NULL DEFAULT 'neutral' CHECK (overall_feeling IN ('positive', 'neutral', 'negative')),
+  next_steps TEXT NOT NULL DEFAULT '',
+  notes TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE interview_notes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can CRUD own interview notes" ON interview_notes FOR ALL USING (auth.uid() = user_id);
+
 -- Add tags and deadline columns to applications
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
 ALTER TABLE applications ADD COLUMN IF NOT EXISTS deadline DATE;

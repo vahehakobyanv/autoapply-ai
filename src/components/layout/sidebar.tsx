@@ -51,11 +51,13 @@ const navSections = [
       { href: '/follow-up', label: 'Follow-Up Emails', icon: Mail },
       { href: '/salary-negotiation', label: 'Negotiate Salary', icon: DollarSign },
       { href: '/skill-gaps', label: 'Skill Gaps', icon: Target },
+      { href: '/career-path', label: 'Career Path', icon: TrendingUp },
     ],
   },
   {
     label: 'More',
     items: [
+      { href: '/interview-notes', label: 'Interview Log', icon: Mic },
       { href: '/offers', label: 'Compare Offers', icon: Scale },
       { href: '/contacts', label: 'Contacts CRM', icon: UserCircle },
       { href: '/documents', label: 'Documents', icon: FolderOpen },
