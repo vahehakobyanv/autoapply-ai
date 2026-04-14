@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Sparkles, Download, FileText, Plus, Trash2, Loader2 } from 'lucide-react';
+import { Sparkles, Download, FileText, Plus, Trash2, Loader2, Link2 } from 'lucide-react';
+import { TemplateGallery } from '@/components/ui/template-gallery';
 import { toast } from 'sonner';
 import type { Resume, ResumeContent } from '@/types';
 
@@ -146,12 +147,24 @@ export default function ResumePage() {
               <SelectItem value="bold">Bold</SelectItem>
             </SelectContent>
           </Select>
+          {selectedResume && (
+            <Button variant="outline" size="sm" onClick={() => {
+              const url = `${window.location.origin}/r/${selectedResume}`;
+              navigator.clipboard.writeText(url);
+              toast.success('Resume link copied!');
+            }}>
+              <Link2 className="h-4 w-4 mr-1" /> Share Link
+            </Button>
+          )}
           <Button onClick={generateResume} disabled={generating}>
             {generating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
             {generating ? 'Generating...' : 'Generate with AI'}
           </Button>
         </div>
       </div>
+
+      {/* Template Gallery */}
+      <TemplateGallery selected={template} onSelect={(id) => setTemplate(id)} />
 
       {/* Resume list */}
       {resumes.length > 1 && (

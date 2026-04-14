@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import {
   Link2, Search, Plus, Building2, MapPin, DollarSign, Loader2,
-  ExternalLink, Bookmark, Zap, CheckSquare, Square, X, Trash2,
+  ExternalLink, Bookmark, Zap, CheckSquare, Square, X, Trash2, Star,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Job } from '@/types';
@@ -33,6 +33,37 @@ export default function JobsPage() {
   const [selectedJobs, setSelectedJobs] = useState<Set<string>>(new Set());
   const [bulkApplying, setBulkApplying] = useState(false);
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, results: [] as { title: string; success: boolean }[] });
+
+  // Filters & sort
+  const [filterSource, setFilterSource] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('newest');
+  const [starredJobs, setStarredJobs] = useState<Set<string>>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('starred-jobs');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    }
+    return new Set();
+  });
+
+  const toggleStar = (jobId: string) => {
+    setStarredJobs(prev => {
+      const next = new Set(prev);
+      if (next.has(jobId)) next.delete(jobId); else next.add(jobId);
+      localStorage.setItem('starred-jobs', JSON.stringify([...next]));
+      return next;
+    });
+  };
+
+  const filteredJobs = jobs
+    .filter(j => filterSource === 'all' || j.source === filterSource)
+    .sort((a, b) => {
+      if (starredJobs.has(a.id) && !starredJobs.has(b.id)) return -1;
+      if (!starredJobs.has(a.id) && starredJobs.has(b.id)) return 1;
+      if (sortBy === 'newest') return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      if (sortBy === 'oldest') return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      if (sortBy === 'company') return a.company.localeCompare(b.company);
+      return 0;
+    });
 
   useEffect(() => {
     fetchJobs();
@@ -280,7 +311,7 @@ export default function JobsPage() {
         <TabsList>
           <TabsTrigger value="import">Import from URL</TabsTrigger>
           <TabsTrigger value="search">Search Jobs</TabsTrigger>
-          <TabsTrigger value="saved">Saved ({jobs.length})</TabsTrigger>
+          <TabsTrigger value="saved">Saved ({filteredJobs.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="import" className="space-y-4">
@@ -354,7 +385,21 @@ export default function JobsPage() {
         </TabsContent>
 
         <TabsContent value="saved" className="space-y-3">
-          {jobs.length === 0 ? (
+          {/* Filters */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex gap-1">
+              {['all', 'hh.ru', 'staff.am', 'manual'].map(s => (
+                <Button key={s} variant={filterSource === s ? 'default' : 'outline'} size="sm" onClick={() => setFilterSource(s)} className="text-xs capitalize">{s === 'all' ? 'All Sources' : s}</Button>
+              ))}
+            </div>
+            <div className="flex gap-1 ml-auto">
+              {[{ id: 'newest', label: 'Newest' }, { id: 'oldest', label: 'Oldest' }, { id: 'company', label: 'Company' }].map(s => (
+                <Button key={s.id} variant={sortBy === s.id ? 'default' : 'outline'} size="sm" onClick={() => setSortBy(s.id)} className="text-xs">{s.label}</Button>
+              ))}
+            </div>
+          </div>
+
+          {filteredJobs.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center text-muted-foreground">
                 No saved jobs yet. Import or search for jobs to get started.
@@ -365,10 +410,10 @@ export default function JobsPage() {
               {/* Bulk select controls */}
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="sm" onClick={selectAll}>
-                  {selectedJobs.size === jobs.length ? (
+                  {selectedJobs.size === filteredJobs.length ? (
                     <><CheckSquare className="h-4 w-4 mr-2" /> Deselect All</>
                   ) : (
-                    <><Square className="h-4 w-4 mr-2" /> Select All ({jobs.length})</>
+                    <><Square className="h-4 w-4 mr-2" /> Select All ({filteredJobs.length})</>
                   )}
                 </Button>
                 {selectedJobs.size > 0 && (
@@ -381,7 +426,7 @@ export default function JobsPage() {
                 )}
               </div>
 
-              {jobs.map((job) => (
+              {filteredJobs.map((job) => (
                 <Card
                   key={job.id}
                   className={`cursor-pointer transition-colors ${selectedJobs.has(job.id) ? 'ring-2 ring-blue-500 bg-blue-50/50 dark:bg-blue-950/20' : ''}`}
@@ -411,6 +456,9 @@ export default function JobsPage() {
                         </div>
                       </div>
                       <div className="flex gap-1 ml-4" onClick={(e) => e.stopPropagation()}>
+                        <Button variant="ghost" size="icon" onClick={() => toggleStar(job.id)}>
+                          <Star className={`h-4 w-4 ${starredJobs.has(job.id) ? 'fill-yellow-500 text-yellow-500' : 'text-slate-300'}`} />
+                        </Button>
                         {job.url && (
                           <a href={job.url} target="_blank" rel="noopener noreferrer">
                             <Button variant="ghost" size="icon"><ExternalLink className="h-4 w-4" /></Button>

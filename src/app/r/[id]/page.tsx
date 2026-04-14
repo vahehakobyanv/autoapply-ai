@@ -1,142 +1,107 @@
-import { createServiceRoleClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient as createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { Zap, Mail, Phone, MapPin } from 'lucide-react';
-import type { ResumeContent } from '@/types';
+import type { Metadata } from 'next';
 
-export default async function PublicResumePage({ params }: { params: Promise<{ id: string }> }) {
+interface Props { params: Promise<{ id: string }>; }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const supabase = await createServiceRoleClient();
+  const supabase = await createClient();
+  const { data } = await supabase.from('resumes').select('title, content').eq('id', id).single();
+  const content = data?.content as Record<string, string> | null;
+  return { title: content?.name ? `${content.name} — Resume` : 'Resume', description: content?.summary || '' };
+}
 
-  const { data: resume } = await supabase
-    .from('resumes')
-    .select('*')
-    .eq('id', id)
-    .single();
+export default async function PublicResumePage({ params }: Props) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: resume } = await supabase.from('resumes').select('*').eq('id', id).single();
 
-  if (!resume) {
-    notFound();
-  }
+  if (!resume) notFound();
 
-  const content: ResumeContent = resume.content;
+  const c = (resume.content || {}) as {
+    name?: string; role?: string; email?: string; phone?: string; location?: string; summary?: string;
+    experience?: { title: string; company: string; startDate: string; endDate: string; description: string }[];
+    education?: { degree: string; institution: string; year: string }[];
+    skills?: string[]; languages?: string[];
+  };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 py-8 px-4">
-      <div className="max-w-3xl mx-auto">
-        {/* Branding banner */}
-        <div className="flex items-center justify-center gap-2 mb-4 text-sm text-slate-400">
-          <Zap className="h-4 w-4" />
-          <span>Created with AutoApply AI</span>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-8 px-4">
+      <div className="max-w-[800px] mx-auto bg-white dark:bg-slate-900 shadow-xl rounded-xl p-8 print:shadow-none print:rounded-none">
+        {/* Header */}
+        <div className="border-b pb-6 mb-6">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{c.name || 'Name'}</h1>
+          <p className="text-lg text-blue-600 mt-1">{c.role || 'Role'}</p>
+          <div className="flex flex-wrap gap-4 mt-2 text-sm text-slate-500">
+            {c.email && <span>{c.email}</span>}
+            {c.phone && <span>{c.phone}</span>}
+            {c.location && <span>{c.location}</span>}
+          </div>
         </div>
 
-        {/* Resume */}
-        <div className="bg-white dark:bg-slate-950 rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-10 text-white">
-            <h1 className="text-3xl font-bold">{content.name || 'Name'}</h1>
-            <p className="text-blue-100 text-lg mt-1">{content.role || 'Role'}</p>
-            <div className="flex flex-wrap gap-4 mt-4 text-sm text-blue-200">
-              {content.email && (
-                <span className="flex items-center gap-1">
-                  <Mail className="h-3 w-3" /> {content.email}
-                </span>
-              )}
-              {content.phone && (
-                <span className="flex items-center gap-1">
-                  <Phone className="h-3 w-3" /> {content.phone}
-                </span>
-              )}
-              {content.location && (
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-3 w-3" /> {content.location}
-                </span>
-              )}
-            </div>
+        {/* Summary */}
+        {c.summary && (
+          <div className="mb-6">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Summary</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{c.summary}</p>
           </div>
+        )}
 
-          <div className="px-8 py-8 space-y-8">
-            {/* Summary */}
-            {content.summary && (
-              <div>
-                <h2 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-2">About</h2>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{content.summary}</p>
-              </div>
-            )}
-
-            {/* Experience */}
-            {content.experience?.length > 0 && (
-              <div>
-                <h2 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-4">Experience</h2>
-                <div className="space-y-5">
-                  {content.experience.map((exp, i) => (
-                    <div key={i} className="relative pl-6 border-l-2 border-blue-100 dark:border-blue-900">
-                      <div className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-blue-600" />
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold text-slate-900 dark:text-white">{exp.title}</h3>
-                          <p className="text-sm text-slate-500">{exp.company}</p>
-                        </div>
-                        <span className="text-xs text-slate-400 whitespace-nowrap">
-                          {exp.startDate} — {exp.endDate}
-                        </span>
-                      </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">{exp.description}</p>
-                    </div>
-                  ))}
+        {/* Experience */}
+        {c.experience && c.experience.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Experience</h2>
+            {c.experience.map((exp, i) => (
+              <div key={i} className="mb-4">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="font-semibold text-sm">{exp.title}</h3>
+                  <span className="text-xs text-slate-400">{exp.startDate} – {exp.endDate}</span>
                 </div>
+                <p className="text-xs text-blue-600 font-medium">{exp.company}</p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{exp.description}</p>
               </div>
-            )}
+            ))}
+          </div>
+        )}
 
-            {/* Education */}
-            {content.education?.length > 0 && (
-              <div>
-                <h2 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-3">Education</h2>
-                {content.education.map((edu, i) => (
-                  <div key={i} className="flex justify-between mb-2">
-                    <div>
-                      <h3 className="font-semibold text-slate-900 dark:text-white">{edu.degree}</h3>
-                      <p className="text-sm text-slate-500">{edu.institution}</p>
-                    </div>
-                    <span className="text-sm text-slate-400">{edu.year}</span>
-                  </div>
+        {/* Education */}
+        {c.education && c.education.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Education</h2>
+            {c.education.map((edu, i) => (
+              <div key={i} className="mb-2">
+                <p className="text-sm font-medium">{edu.degree}</p>
+                <p className="text-xs text-slate-500">{edu.institution} — {edu.year}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Skills & Languages */}
+        <div className="grid grid-cols-2 gap-6">
+          {c.skills && c.skills.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Skills</h2>
+              <div className="flex flex-wrap gap-1.5">
+                {c.skills.map((s, i) => (
+                  <span key={i} className="text-xs bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">{s}</span>
                 ))}
               </div>
-            )}
-
-            {/* Skills */}
-            {content.skills?.length > 0 && (
-              <div>
-                <h2 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-3">Skills</h2>
-                <div className="flex flex-wrap gap-2">
-                  {content.skills.map((skill, i) => (
-                    <span
-                      key={i}
-                      className="bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-sm px-3 py-1 rounded-full"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Languages */}
-            {content.languages?.length > 0 && (
-              <div>
-                <h2 className="text-sm font-bold text-blue-600 uppercase tracking-wider mb-2">Languages</h2>
-                <p className="text-slate-600 dark:text-slate-400">{content.languages.join(' · ')}</p>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
+          {c.languages && c.languages.length > 0 && (
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Languages</h2>
+              <p className="text-xs text-slate-600 dark:text-slate-400">{c.languages.join(' · ')}</p>
+            </div>
+          )}
         </div>
 
-        {/* Footer CTA */}
-        <div className="text-center mt-6">
-          <a
-            href="https://autoapply-ai-vert.vercel.app/register"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-          >
-            <Zap className="h-4 w-4" />
-            Create your resume with AutoApply AI
+        {/* Footer */}
+        <div className="mt-8 pt-4 border-t text-center">
+          <a href="https://autoapply-ai-vert.vercel.app?ref=resume" className="text-xs text-blue-500 hover:underline">
+            Created with AutoApply AI
           </a>
         </div>
       </div>
