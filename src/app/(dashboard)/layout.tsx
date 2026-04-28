@@ -9,6 +9,7 @@ import { WhatsNew } from '@/components/layout/whats-new';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { QuickStatsBar } from '@/components/layout/quick-stats-bar';
 import { ReferralPopup } from '@/components/layout/referral-popup';
+import { AdminSync } from '@/components/layout/admin-sync';
 import { Toaster } from '@/components/ui/sonner';
 
 export const dynamic = 'force-dynamic';
@@ -32,6 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <FAB />
       <MobileNav />
       <ReferralPopup />
+      <AdminSync />
       <Toaster />
     </div>
   );

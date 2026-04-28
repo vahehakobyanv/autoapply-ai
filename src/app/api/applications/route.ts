@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { isAdminEmail } from '@/lib/admin';
 
 export async function GET() {
   const supabase = await createServerSupabaseClient();
@@ -30,25 +31,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Check subscription limits
-  const { data: sub } = await supabase
-    .from('subscriptions')
-    .select('*')
-    .eq('user_id', user.id)
-    .single();
+  // Admin users bypass all subscription limits
+  const isAdmin = isAdminEmail(user.email);
 
-  if (sub?.plan === 'free') {
-    const { count } = await supabase
-      .from('applications')
-      .select('*', { count: 'exact', head: true })
+  if (!isAdmin) {
+    // Check subscription limits
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('*')
       .eq('user_id', user.id)
-      .gte('applied_at', new Date(new Date().setDate(1)).toISOString());
+      .single();
 
-    if ((count || 0) >= 5) {
-      return NextResponse.json(
-        { error: 'Free plan limit reached (5/month). Upgrade to Pro for unlimited applications.' },
-        { status: 403 }
-      );
+    if (sub?.plan === 'free') {
+      const { count } = await supabase
+        .from('applications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('applied_at', new Date(new Date().setDate(1)).toISOString());
+
+      if ((count || 0) >= 5) {
+        return NextResponse.json(
+          { error: 'Free plan limit reached (5/month). Upgrade to Pro for unlimited applications.' },
+          { status: 403 }
+        );
+      }
     }
   }
 

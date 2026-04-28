@@ -1,6 +1,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { stripe, isStripeConfigured } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
+import { isAdminEmail } from '@/lib/admin';
 
 export async function POST(request: Request) {
   if (!isStripeConfigured) {
@@ -91,6 +92,16 @@ export async function GET() {
     .select('*')
     .eq('user_id', user.id)
     .single();
+
+  // Admin users always get Pro access
+  if (isAdminEmail(user.email)) {
+    return NextResponse.json({
+      ...(data || {}),
+      plan: 'pro',
+      status: 'active',
+      is_admin: true,
+    });
+  }
 
   return NextResponse.json(data || { plan: 'free', status: 'active' });
 }
